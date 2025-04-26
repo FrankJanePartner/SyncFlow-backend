@@ -1,0 +1,133 @@
+*{
+    color:  black;
+    text-decoration: none;
+}
+
+body{
+    width: 100dvw;
+    height: fit-content;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+}
+.container{
+    width: 90dvw;
+    height: fit-content;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+}
+
+.container .contents{
+    width: 100%;
+    height: 30dvh;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 2px solid black;
+    padding: 1rem;
+    margin-bottom: 3rem;
+}
+
+.container .contents .brand-display{
+    width: 50%;
+    height: 95%;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.container .contents .brand .logo{
+    height: 5rem;
+    display: flex;
+    justify-content: flex-start;
+    align-content: center;
+}
+
+.container .contents .brand img{
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 100%;
+    margin-right: 1.5rem;
+}
+
+.container .contents .links,
+.container .contents .displays{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.container .contents .displays{
+    width: 50%;
+}
+
+.container .contents .links{
+    width: 40%;
+    border-right: 2px solid black;
+}
+
+
+button{
+    padding: 1rem 4rem;
+}
+
+a{
+    text-decoration: none;
+    font-size: 1.8rem;
+}
+
+
+.container .forms-wrapper{
+    width: 50%;
+    height: 50dvh;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border: 2px solid black;
+    padding: 1rem;
+    overflow-y: scroll;
+}
+
+.container .forms-wrapper form{
+    display:none;
+}
+
+.container .forms-wrapper form h3{
+    text-align: center;
+    font-size: 3rem;
+    margin: 0;
+}
+
+.container .forms-wrapper .form-item{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid brown;
+    padding: 0;
+    padding-bottom: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+.container .forms-wrapper .form-item label{
+    font-size: 1.7rem;
+}
+
+.container .forms-wrapper .form-item input,
+.container .forms-wrapper .form-item textarea{
+    height: 2rem;
+}
