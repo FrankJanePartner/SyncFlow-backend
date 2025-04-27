@@ -36,7 +36,7 @@
                                 {% for bS in social_accounts %}
                                     <i class="bi bi-{{ bS.provider }}"></i>
                                 {% endfor %}
-                                <button onclick="opentab('#brand-form')">&plus</button>
+                                <button onclick="opentab('#social-form')">&plus</button>
                             </div>
                         </div>
                     {% endfor %}
@@ -66,22 +66,27 @@
                 </form>
                 <form action="{% url 'core:add-social' %}" method="post" enctype="multipart/form-data" id="social-form">
                     {% csrf_token %}
-                    <h3> Add Task</h3>
+                    <h3>Connect a Social Account</h3>
+                    
                     <div class="form-item">
-                        <label for="brand">Select Brand</label>
-                        <select name="brand" id="brand">
-                            <option value="">Select Brand</option>
-                            {% for brand in brands %}
-                                <option value="{{ brand.id }}">{{ brand.name }}</option>
+                        <label for="brand_id">Choose Brand:</label>
+                        <select name="brand_id" required>
+                            {% for brand in user.brands.all %}
+                            <option value="{{ brand.id }}">{{ brand.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-item">
+                        <label for="provider">Social Media Provider:</label>
+                        <select name="provider" required>
+                            {% for provider in providers %}
+                                <option value="{{ provider.id }}">{{ provider.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
 
-                    <div class="form-item">
-                        <label for="logo">Brand Logo</label>
-                        <input type="file" name="logo" id="logo">
-                    </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit">Connect Account</button>
                 </form>
                 <form action="" method="post" enctype="multipart/form-data" id="task-form">
                     {% csrf_token %}

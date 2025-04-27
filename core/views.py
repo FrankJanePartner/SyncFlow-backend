@@ -35,17 +35,35 @@ def add_brand(request):
     return redirect('core:dashboard')
 
 
+# @login_required
+# def add_social(request):
+#     if request.method == 'POST':
+#         brand_id = request.POST.get('brand_id')
+#         provider = request.POST.get('provider')
+#         access_token = request.POST.get('access_token')
+
+#     brand = get_object_or_404(Brand, id=brand_id, owner=request.user)
+
+#     BrandSocialAccount.objects.get_or_create(
+#         brand=brand,
+#         provider=provider,
+#         uid=provider_user_id,
+#         access_token=access_token,
+#         extra_data=social_data
+#     )
+    
+#     return redirect('/accounts/facebook/login/')
+
+
 @login_required
 def add_social(request):
     if request.method == 'POST':
+        brand_id = request.POST.get('brand_id')
         provider = request.POST.get('provider')
 
-    # BrandSocialAccount.objects.get_or_create(
-    #     brand = request.user,
-    #     provider = name,
-    #     uid = image,
-    #     description = description
-    # )
+        # Save brand in session for use after callback
+        request.session['selected_brand_id'] = brand_id
 
-    # messages.success(request, 'added Successfully')
-    return redirect('core:dashboard')
+        # Redirect to provider login using allauth
+        return redirect(f'/accounts/{provider}/login/')
+

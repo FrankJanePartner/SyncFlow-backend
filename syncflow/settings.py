@@ -9,6 +9,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+SITE_ID=1
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -16,8 +18,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
 
     # my apps
+    # 'accounts',
     'core',
 
     # third party apps
@@ -35,46 +39,46 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.amazon',
-    'allauth.socialaccount.providers.angellist',
-    'allauth.socialaccount.providers.digitalocean',
+    # 'allauth.socialaccount.providers.amazon',
+    # 'allauth.socialaccount.providers.angellist',
+    # 'allauth.socialaccount.providers.digitalocean',
     'allauth.socialaccount.providers.discord',
-    'allauth.socialaccount.providers.dropbox',
+    # 'allauth.socialaccount.providers.dropbox',
     # 'allauth.socialaccount.providers.edx',
     'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.figma',
-    'allauth.socialaccount.providers.frontier',
-    'allauth.socialaccount.providers.fxa',
-    'allauth.socialaccount.providers.gitea',
+    # 'allauth.socialaccount.providers.figma',
+    # 'allauth.socialaccount.providers.frontier',
+    # 'allauth.socialaccount.providers.fxa',
+    # 'allauth.socialaccount.providers.gitea',
     'allauth.socialaccount.providers.github',
-    'allauth.socialaccount.providers.gitlab',
+    # 'allauth.socialaccount.providers.gitlab',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.gumroad',
+    # 'allauth.socialaccount.providers.gumroad',
     'allauth.socialaccount.providers.instagram',
     # 'allauth.socialaccount.providers.linkedin',
     'allauth.socialaccount.providers.linkedin_oauth2',
-    'allauth.socialaccount.providers.meetup',
-    'allauth.socialaccount.providers.microsoft',
-    'allauth.socialaccount.providers.notion',
+    # 'allauth.socialaccount.providers.meetup',
+    # 'allauth.socialaccount.providers.microsoft',
+    # 'allauth.socialaccount.providers.notion',
     'allauth.socialaccount.providers.openid_connect',
-    'allauth.socialaccount.providers.pinterest',
+    # 'allauth.socialaccount.providers.pinterest',
     'allauth.socialaccount.providers.reddit',
-    'allauth.socialaccount.providers.shopify',
-    'allauth.socialaccount.providers.slack',
-    'allauth.socialaccount.providers.snapchat',
-    'allauth.socialaccount.providers.soundcloud',
-    'allauth.socialaccount.providers.spotify',
+    # 'allauth.socialaccount.providers.shopify',
+    # 'allauth.socialaccount.providers.slack',
+    # 'allauth.socialaccount.providers.snapchat',
+    # 'allauth.socialaccount.providers.soundcloud',
+    # 'allauth.socialaccount.providers.spotify',
     # 'allauth.socialaccount.providers.steam',
     'allauth.socialaccount.providers.telegram',
     # 'allauth.socialaccount.providers.trello',
-    'allauth.socialaccount.providers.twitch',
+    # 'allauth.socialaccount.providers.twitch',
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.twitter_oauth2',
-    'allauth.socialaccount.providers.vimeo',
-    'allauth.socialaccount.providers.vimeo_oauth2',
-    'allauth.socialaccount.providers.vk',
-    'allauth.socialaccount.providers.yahoo',
-    'allauth.socialaccount.providers.zoom',
+    # 'allauth.socialaccount.providers.vimeo',
+    # 'allauth.socialaccount.providers.vimeo_oauth2',
+    # 'allauth.socialaccount.providers.vk',
+    # 'allauth.socialaccount.providers.yahoo',
+    # 'allauth.socialaccount.providers.zoom',
 ]
 
 MIDDLEWARE = [
@@ -108,6 +112,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.brand',
+                'core.context_processors.enabled_social_providers',
             ],
         },
     },
@@ -163,7 +168,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -192,7 +197,94 @@ REST_FRAMEWORK = {
     ),
 }
 
+
 SOCIALACCOUNT_PROVIDERS = {
+    # 'amazon': {
+    #     'APP': {
+    #         'client_id': 'YOUR-AMAZON-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-AMAZON-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'angellist': {
+    #     'APP': {
+    #         'client_id': 'YOUR-ANGELLIST-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-ANGELLIST-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'digitalocean': {
+    #     'APP': {
+    #         'client_id': 'YOUR-DIGITALOCEAN-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-DIGITALOCEAN-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'discord': {
+        'APP': {
+            'client_id': 'YOUR-DISCORD-CLIENT-ID-HERE',
+            'secret': 'YOUR-DISCORD-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'dropbox': {
+    #     'APP': {
+    #         'client_id': 'YOUR-DROPBOX-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-DROPBOX-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'facebook': {
+        'METHOD': 'oauth2',
+        'SCOPE': ['email', 'public_profile'],
+        'APP': {
+            'client_id': '509697181767177',
+            'secret': '651a9335cb086c9c8d5fca07d71f1a86',
+            'key': ''
+        }
+    },
+    # 'figma': {
+    #     'APP': {
+    #         'client_id': 'YOUR-FIGMA-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-FIGMA-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'frontier': {
+    #     'APP': {
+    #         'client_id': 'YOUR-FRONTIER-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-FRONTIER-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'fxa': {
+    #     'APP': {
+    #         'client_id': 'YOUR-FXA-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-FXA-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'gitea': {
+    #     'APP': {
+    #         'client_id': 'YOUR-GITEA-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-GITEA-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'github': {
+        'APP': {
+            'client_id': 'YOUR-GITHUB-CLIENT-ID-HERE',
+            'secret': 'YOUR-GITHUB-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'gitlab': {
+    #     'APP': {
+    #         'client_id': 'YOUR-GITLAB-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-GITLAB-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
     'google': {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
@@ -202,15 +294,167 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': ''
         }
     },
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
+    # 'gumroad': {
+    #     'APP': {
+    #         'client_id': 'YOUR-GUMROAD-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-GUMROAD-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'instagram': {
         'APP': {
-            'client_id': '509697181767177',
-            'secret': '651a9335cb086c9c8d5fca07d71f1a86',
+            'client_id': '1812151136033639',
+            'secret': '348f0f1e8cad793b845e3bed44f6e55f',
             'key': ''
         }
-    }
+    },
+    'linkedin_oauth2': {
+        'APP': {
+            'client_id': 'YOUR-LINKEDIN-CLIENT-ID-HERE',
+            'secret': 'YOUR-LINKEDIN-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'meetup': {
+    #     'APP': {
+    #         'client_id': 'YOUR-MEETUP-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-MEETUP-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'microsoft': {
+    #     'APP': {
+    #         'client_id': 'YOUR-MICROSOFT-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-MICROSOFT-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'notion': {
+    #     'APP': {
+    #         'client_id': 'YOUR-NOTION-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-NOTION-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'openid_connect': {
+        'APP': {
+            'client_id': 'YOUR-OPENID-CLIENT-ID-HERE',
+            'secret': 'YOUR-OPENID-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'pinterest': {
+    #     'APP': {
+    #         'client_id': 'YOUR-PINTEREST-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-PINTEREST-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'reddit': {
+        'APP': {
+            'client_id': 'YOUR-REDDIT-CLIENT-ID-HERE',
+            'secret': 'YOUR-REDDIT-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'shopify': {
+    #     'APP': {
+    #         'client_id': 'YOUR-SHOPIFY-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-SHOPIFY-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'slack': {
+    #     'APP': {
+    #         'client_id': 'YOUR-SLACK-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-SLACK-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'snapchat': {
+    #     'APP': {
+    #         'client_id': 'YOUR-SNAPCHAT-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-SNAPCHAT-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'soundcloud': {
+    #     'APP': {
+    #         'client_id': 'YOUR-SOUNDCLOUD-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-SOUNDCLOUD-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'spotify': {
+    #     'APP': {
+    #         'client_id': 'YOUR-SPOTIFY-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-SPOTIFY-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'telegram': {
+        'APP': {
+            'client_id': 'YOUR-TELEGRAM-CLIENT-ID-HERE',
+            'secret': 'YOUR-TELEGRAM-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'twitch': {
+    #     'APP': {
+    #         'client_id': 'YOUR-TWITCH-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-TWITCH-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    'twitter': {
+        'APP': {
+            'client_id': 'YOUR-TWITTER-CLIENT-ID-HERE',
+            'secret': 'YOUR-TWITTER-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    'twitter_oauth2': {
+        'APP': {
+            'client_id': 'YOUR-TWITTER-OAUTH2-CLIENT-ID-HERE',
+            'secret': 'YOUR-TWITTER-OAUTH2-CLIENT-SECRET-HERE',
+            'key': ''
+        }
+    },
+    # 'vimeo': {
+    #     'APP': {
+    #         'client_id': 'YOUR-VIMEO-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-VIMEO-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'vimeo_oauth2': {
+    #     'APP': {
+    #         'client_id': 'YOUR-VIMEO-OAUTH2-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-VIMEO-OAUTH2-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'vk': {
+    #     'APP': {
+    #         'client_id': 'YOUR-VK-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-VK-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'yahoo': {
+    #     'APP': {
+    #         'client_id': 'YOUR-YAHOO-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-YAHOO-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
+    # 'zoom': {
+    #     'APP': {
+    #         'client_id': 'YOUR-ZOOM-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-ZOOM-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
 }
 
 

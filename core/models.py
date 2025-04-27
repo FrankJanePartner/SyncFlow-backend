@@ -1,9 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
 class Brand(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='brands')
     name = models.CharField(max_length=50)
     slug = models.SlugField()
     logo = models.ImageField(upload_to="Brand_logo/", blank=True, default="default/brand_default")
