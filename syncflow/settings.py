@@ -9,6 +9,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
 SITE_ID=1
 
 INSTALLED_APPS = [
@@ -21,7 +22,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     # my apps
-    # 'accounts',
     'core',
 
     # third party apps
@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     # 'allauth.socialaccount.providers.meetup',
     # 'allauth.socialaccount.providers.microsoft',
     # 'allauth.socialaccount.providers.notion',
-    'allauth.socialaccount.providers.openid_connect',
+    # 'allauth.socialaccount.providers.openid_connect',
     # 'allauth.socialaccount.providers.pinterest',
     'allauth.socialaccount.providers.reddit',
     # 'allauth.socialaccount.providers.shopify',
@@ -111,8 +111,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.brand',
-                'core.context_processors.enabled_social_providers',
+                'core.context_processors.brand'
             ],
         },
     },
@@ -336,13 +335,13 @@ SOCIALACCOUNT_PROVIDERS = {
     #         'key': ''
     #     }
     # },
-    'openid_connect': {
-        'APP': {
-            'client_id': 'YOUR-OPENID-CLIENT-ID-HERE',
-            'secret': 'YOUR-OPENID-CLIENT-SECRET-HERE',
-            'key': ''
-        }
-    },
+    # 'openid_connect': {
+    #     'APP': {
+    #         'client_id': 'YOUR-OPENID-CLIENT-ID-HERE',
+    #         'secret': 'YOUR-OPENID-CLIENT-SECRET-HERE',
+    #         'key': ''
+    #     }
+    # },
     # 'pinterest': {
     #     'APP': {
     #         'client_id': 'YOUR-PINTEREST-CLIENT-ID-HERE',
@@ -458,6 +457,14 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
+# AUTH_USER_MODEL = 'accounts.CustomUser'
+# ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.custom_forms.CustomSignupForm'
+
+# REST_AUTH_REGISTER_SERIALIZERS = {
+#     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+# }
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -498,14 +505,18 @@ SIGNUP_URL = '/accounts/signup/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
 
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = "optional" #"mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
 
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "SyncFlow "
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "/accounts/login/"
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = "/dashboard/"
+
+
+# REST_USE_JWT = True  # if you're using JWT
 
 TINYMCE_DEFAULT_CONFIG = {
     'cleanup_on_startup': True,

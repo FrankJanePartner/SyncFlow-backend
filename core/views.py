@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.contrib import messages
 from .models import Brand, BrandSocialAccount
+from allauth.socialaccount.providers import registry
+
 
 # Create your views here.
 def home(request):
@@ -15,7 +17,10 @@ def home(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'core/dashboard.html')
+    providers = registry.get_class_list()
+    provider_list = [{'id': provider.id, 'name': provider.name} for provider in providers]
+    context = {'providers': provider_list}
+    return render(request, 'core/dashboard.html', context)
 
 @login_required
 def add_brand(request):

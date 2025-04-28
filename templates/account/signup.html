@@ -1,45 +1,72 @@
-{% extends "account/base_entrance.html" %}
+{% load socialaccount %}
+{% load allauth account %}
 {% load allauth i18n %}
-{% block head_title %}
-    {% trans "Signup" %}
-{% endblock head_title %}
-{% block content %}
-    {% element h1 %}
-        {% trans "Sign Up" %}
-    {% endelement %}
-    {% setvar link %}
-        <a href="{{ login_url }}">
-        {% endsetvar %}
-        {% setvar end_link %}
-        </a>
-    {% endsetvar %}
-    {% element p %}
-        {% blocktranslate %}Already have an account? Then please {{ link }}sign in{{ end_link }}.{% endblocktranslate %}
-    {% endelement %}
-    {% if not SOCIALACCOUNT_ONLY %}
-        {% url 'account_signup' as action_url %}
-        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
-            {% slot body %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Signup</title>
+    </head>
+    <body>
+        <div class="container socialSignIn">
+            <div class="formHeader">
+                <h1>Create an Account</h1>
+            </div>
+
+            <form method="post" action="/accounts/signup/">
                 {% csrf_token %}
-                {% element fields form=form unlabeled=True %}
-                {% endelement %}
-                {{ redirect_field }}
-            {% endslot %}
-            {% slot actions %}
-                {% element button tags="prominent,signup" type="submit" %}
-                    {% trans "Sign Up" %}
-                {% endelement %}
-            {% endslot %}
-        {% endelement %}
-    {% endif %}
-    {% if PASSKEY_SIGNUP_ENABLED %}
-        {% element hr %}
-        {% endelement %}
-        {% element button href=signup_by_passkey_url tags="prominent,signup,outline,primary" %}
-            {% trans "Sign up using a passkey" %}
-        {% endelement %}
-    {% endif %}
-    {% if SOCIALACCOUNT_ENABLED %}
-        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
-    {% endif %}
-{% endblock content %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <!-- Loop through each field in the form -->
+                {% for field in form %}
+                    <div>
+                        {% if field.errors %}
+                            <div class="alert alert-danger">
+                                {{ field.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="form-group">
+                    <label for="id_first_name">First Name:</label>
+                    <input type="text" name="first_name" value="" placeholder="Enter First Name" autocomplete="first_name" minlength="1" maxlength="150" required id="id_username">
+                </div>
+                <div class="form-group">
+                    <label for="id_username">Last Name:</label>
+                    <input type="text" name="last_name" value="" placeholder="Enter Last Name" autocomplete="last_name" minlength="1" maxlength="150" required id="id_Last Name">
+                </div>
+                <div class="form-group">
+                    <label for="id_email">Email:</label>
+                    <input type="email" name="email" value="" placeholder="Enter Email address" autocomplete="email" maxlength="320" id="id_email">
+                </div>
+                <div class="form-group">
+                    <label for="id_password1">Password:</label>
+                    <input type="password" name="password1" placeholder="Enter Password" autocomplete="new-password" required aria-invalid="true" aria-describedby="id_password1_helptext" id="id_password1">            
+                </div>
+                <div class="form-group">
+                    <label for="id_password2" style="color:var(--darkBlue)">Conirm Password:</label>
+                    <input type="password" name="password2" placeholder="Re-enter Password" autocomplete="password" required aria-invalid="true" id="id_password2">
+                </div>
+                <div class="form-group1">
+                    <button type="submit" class="btn-primary" id="btn-primary">Sign Up</button>
+                    <p style="color:var(--darkBlue)">Already have an account? <a style="color:var(--yellow)" href="/accounts/login/">Log in</a></p>
+                </div>
+                <div class="form-group">
+                    <a class="social-signup-google allauth social-signup" href="/accounts/google/login/">
+                        <i class="fa-brands fa-google"></i>
+                        Continue with Google
+                    </a>
+                    <a class="social-signup-facebook allauth social-signup" href="/accounts/facebook/login/">
+                        <i class="fa-brands fa-facebook"></i>
+                        Continue with Facebook
+                    </a>
+                </div>
+            </form>
+        </div>
+    </body>
+</html>

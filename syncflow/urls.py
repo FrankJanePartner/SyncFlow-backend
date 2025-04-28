@@ -14,6 +14,7 @@ urlpatterns = [
 
     # my apps urls
     path('', include('core.urls', namespace='core')),
+    # path('accounts', include('accounts.urls', namespace='accounts')),
     path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
 
     # third party urls
