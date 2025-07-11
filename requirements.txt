@@ -10,7 +10,7 @@ drf-spectacular
 # Authentication
 django-allauth
 dj-rest-auth
-django-rest-framework-simplejwt
+djangorestframework-simplejwt
 
 # Database
 django-postgres-extra
@@ -35,3 +35,4 @@ isort
 # Production
 gunicorn
 whitenoise
+huggingface-hub==0.19.4
