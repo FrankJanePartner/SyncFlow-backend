@@ -36,3 +36,4 @@ isort
 gunicorn
 whitenoise
 huggingface-hub==0.19.4
+django-csp
