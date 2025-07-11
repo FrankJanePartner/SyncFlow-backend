@@ -324,7 +324,11 @@ SPECTACULAR_SETTINGS = {
 SOCIAL_AUTH_CONFIGS = SOCIAL_AUTH_CONFIGS
 
 # Hugging Face API key and model configuration
+<<<<<<< HEAD
 HUGGINGFACE_API_KEY = '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'
+=======
+HUGGINGFACE_API_KEY = env('HUGGINGFACE_API_KEY')
+>>>>>>> 16f3add85eb25ea233e47fea4670fccd1ba662fc
 HUGGINGFACE_MODEL = "mistralai/Mixtral-8x7B-Instruct-v0.1"
 
 # Default large language model providers configuration
