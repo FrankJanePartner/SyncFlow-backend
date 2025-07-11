@@ -6,7 +6,7 @@ from .social_config import SOCIAL_AUTH_CONFIGS
 
 # Load environment variables from .env file
 env = environ.Env()
-environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env')
+environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env.example')
 
 # Base directory of the projectfrom pathlib import Path
 
@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-
 DEBUG = False
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['syncflow-backend-production.up.railway.app']
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -283,7 +283,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 # Trusted origins for CSRF protection
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8080", "http://localhost:8000", "syncflow-backend-production.up.railway.app", "https://syncflow-frontend-production.up.railway.app"]
 
 # Cookie settings for session and CSRF
 SESSION_COOKIE_SAMESITE = "Lax"

@@ -3,7 +3,7 @@ import environ
 
 # Load env
 env = environ.Env()
-environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env')
+environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env.example')
 
 SOCIAL_AUTH_CONFIGS = {
     'facebook': {
