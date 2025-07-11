@@ -37,3 +37,9 @@ gunicorn
 whitenoise
 huggingface-hub==0.19.4
 django-csp
+requests
+Pillow
+transformers
+diffusers
+torch
+django-filter
