@@ -6,7 +6,7 @@ from .social_config import SOCIAL_AUTH_CONFIGS
 
 # Load environment variables from .env file
 env = environ.Env()
-environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env')
+environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env.example')
 
 # Base directory of the projectfrom pathlib import Path
 
