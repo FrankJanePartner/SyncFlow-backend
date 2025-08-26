@@ -21,30 +21,30 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Authentication and user management
-    path('api/accounts/', include('apps.UserAccount.urls', namespace='accounts')),
+    path('api/accounts/', include('UserAccount.urls', namespace='accounts')),
     
     path('api/auth/social/', include('allauth.urls')),
     
     # Social media features
-    path('api/social/', include('apps.social.urls')),
+    path('api/social/', include('social.urls')),
     
     # Analytics
-    path('api/analytics/', include('apps.analytics.urls')),
+    path('api/analytics/', include('analytics.urls')),
     
     # Automations
-    path('api/automations/', include('apps.automations.urls')),
+    path('api/automations/', include('automations.urls')),
     
     # Campaigns
-    path('api/campaigns/', include('apps.campaigns.urls')),
+    path('api/campaigns/', include('campaigns.urls')),
 
    # core
-    path('api/', include('apps.core.urls')),
+    path('api/', include('core.urls')),
     
     # Integrations
-    path('api/integrations/', include('apps.integrations.urls')),
+    path('api/integrations/', include('integrations.urls')),
 
     # socials
-    path('api/social/', include('apps.social.urls')),
+    path('api/social/', include('social.urls')),
    
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Video AI Tool - Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .screen {
+            display: none;
+        }
+        .screen.active {
+            display: block;
+        }
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 40;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .modal-content {
+            animation: slideUp 0.4s ease-out;
+        }
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            color: white;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid #fff;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .tag-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .tag-btn.selected {
+            background-color: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+        .asset-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .asset-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 antialiased">
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay items-center justify-center">
+        <div class="text-center">
+            <div class="spinner mx-auto"></div>
+            <p class="mt-4 text-lg font-semibold">The AI Agent is thinking...</p>
+        </div>
+    </div>
+
+    <div id="app-container" class="min-h-screen p-4 sm:p-6 lg:p-8">
+
+        <!-- SCREEN 1: IDEA HUB -->
+        <div id="idea-hub" class="screen active max-w-4xl mx-auto text-center flex flex-col justify-center min-h-[80vh]">
+            <div class="mb-12">
+                <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">Viral Video AI Tool</h1>
+                <p class="text-lg text-gray-400">Your co-pilot for creating content that connects and converts.</p>
+            </div>
+            <div class="space-y-6">
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <label for="user-idea-input" class="block text-lg font-medium text-white mb-3">Already have an idea?</label>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="user-idea-input" placeholder="e.g., 'An unboxing video for our new product...'" class="w-full bg-gray-700 text-white rounded-lg border-gray-600 focus:ring-indigo-500 focus:border-indigo-500 px-4 py-3">
+                        <button id="analyze-idea-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 whitespace-nowrap">Analyze My Idea</button>
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center" aria-hidden="true">
+                        <div class="w-full border-t border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <span class="bg-gray-900 px-2 text-sm text-gray-500">OR</span>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                    <p class="text-lg font-medium text-white mb-3">Need some inspiration?</p>
+                    <button id="generate-ideas-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg transition-colors duration-300 text-xl flex items-center justify-center gap-2">
+                        <i data-feather="zap" class="w-6 h-6"></i>
+                        ✨ Access the Idea Generation Agent
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: IDEA WORKBENCH -->
+        <div id="idea-workbench" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-white">Idea Workbench</h2>
+                <button id="back-to-hub-btn" class="text-gray-400 hover:text-white flex items-center gap-2">
+                    <i data-feather="arrow-left"></i> Back
+                </button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel: Idea List -->
+                <div class="lg:col-span-1 bg-gray-800 p-4 rounded-xl">
+                    <h3 class="font-bold mb-4 text-white">Generated Ideas</h3>
+                    <div id="idea-list" class="space-y-3">
+                        <!-- Idea cards will be injected here -->
+                    </div>
+                </div>
+                <!-- Right Panel: Selected Idea Details -->
+                <div id="selected-idea-panel" class="lg:col-span-2 space-y-6">
+                    <!-- Details will be injected here -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- SCREEN 3: ASSET LIBRARY -->
+        <div id="asset-library" class="screen">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-white">Production Package</h2>
+                 <button id="back-to-workbench-btn" class="text-gray-400 hover:text-white flex items-center gap-2">
+                    <i data-feather="arrow-left"></i> Back to Workbench
+                </button>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl mb-6">
+                <h3 id="asset-title" class="text-2xl font-bold text-indigo-400"></h3>
+            </div>
+            <div id="asset-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Asset cards will be injected here -->
+            </div>
+             <div class="mt-8 text-center">
+                <button id="send-to-publisher-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg transition-colors duration-300 text-lg flex items-center justify-center gap-2 mx-auto">
+                    <i data-feather="send"></i>
+                    Send to Publisher
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: IDEA GENERATION WIZARD -->
+    <div id="idea-wizard-modal" class="modal-backdrop items-center justify-center">
+        <div class="modal-content bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl m-4 overflow-hidden">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold text-white flex items-center gap-3"><i data-feather="zap" class="text-green-400"></i>Idea Generation Agent</h3>
+                    <button id="close-wizard-btn" class="text-gray-500 hover:text-white">&times;</button>
+                </div>
+                <p class="text-gray-400 mb-6">Just a few questions to get started...</p>
+                
+                <div class="space-y-6">
+                    <!-- Step 1 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">1. What's your business niche?</label>
+                        <input type="text" id="niche-input" value="Local Coffee Shop" class="w-full bg-gray-700 text-white rounded-lg border-gray-600 px-3 py-2">
+                    </div>
+                    <!-- Step 2 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">2. What is the primary goal of this video?</label>
+                        <div class="flex flex-wrap gap-2" id="goal-tags">
+                            <button class="tag-btn selected border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Brand Awareness">Brand Awareness</button>
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Sales/Leads">Sales/Leads</button>
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Engagement">Engagement</button>
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Education">Education</button>
+                        </div>
+                    </div>
+                    <!-- Step 3 -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">3. What's your preferred tone? (Optional)</label>
+                        <div class="flex flex-wrap gap-2" id="tone-tags">
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Playful">Playful</button>
+                            <button class="tag-btn selected border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Emotional">Emotional</button>
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Inspirational">Inspirational</button>
+                            <button class="tag-btn border border-gray-600 px-3 py-1 rounded-full text-sm" data-value="Bold">Bold</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-900 px-6 py-4 text-right">
+                <button id="find-ideas-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg transition-colors duration-300">
+                    Find Viral Ideas
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL: GENERIC MESSAGE / NOTIFICATION -->
+    <div id="message-modal" class="modal-backdrop items-center justify-center">
+        <div class="modal-content bg-gray-800 rounded-xl shadow-2xl w-full max-w-md m-4 p-6 text-center">
+            <div id="message-icon" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                 <i data-feather="check" class="h-6 w-6 text-green-600"></i>
+            </div>
+            <h3 id="message-title" class="text-lg font-medium text-white">Title</h3>
+            <p id="message-text" class="text-sm text-gray-400 mt-2">Text</p>
+            <button id="close-message-btn" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">OK</button>
+        </div>
+    </div>
+
+
+<script>
+    // --- Feather Icons Initialization ---
+    feather.replace();
+
+    // --- DOM Elements ---
+    const screens = document.querySelectorAll('.screen');
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const ideaHub = document.getElementById('idea-hub');
+    const ideaWorkbench = document.getElementById('idea-workbench');
+    const assetLibrary = document.getElementById('asset-library');
+    
+    const ideaWizardModal = document.getElementById('idea-wizard-modal');
+    const messageModal = document.getElementById('message-modal');
+
+    // --- State Management ---
+    let ideas = [];
+    let currentIdea = null;
+
+    // --- Gemini API Integration ---
+    const API_KEY = ""; // Left empty as per instructions
+
+    async function callGemini(prompt) {
+        loadingOverlay.style.display = 'flex';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+        
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }] })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts[0].text) {
+                return result.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error("Invalid API response structure.");
+            }
+        } catch (error) {
+            console.error("Gemini API call failed:", error);
+            showMessage('API Error', 'Could not get a response from the AI agent. Please check the console for details.', 'alert-triangle', 'red');
+            return null;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    }
+
+    // --- Functions ---
+
+    function navigateTo(screenId) {
+        screens.forEach(screen => screen.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function hideModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+    
+    function showMessage(title, text, icon = 'check', iconColor = 'green') {
+        document.getElementById('message-title').textContent = title;
+        document.getElementById('message-text').textContent = text;
+        const iconContainer = document.getElementById('message-icon');
+        iconContainer.innerHTML = `<i data-feather="${icon}" class="h-6 w-6 text-${iconColor}-600"></i>`;
+        iconContainer.className = `mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-${iconColor}-100 mb-4`;
+        feather.replace();
+        showModal('message-modal');
+    }
+
+    function renderIdeaList() {
+        const listContainer = document.getElementById('idea-list');
+        listContainer.innerHTML = '';
+        if (ideas.length === 0) {
+            listContainer.innerHTML = `<p class="text-gray-500 text-sm">No ideas generated yet. Use the Idea Generation Agent to start!</p>`;
+            return;
+        }
+        ideas.forEach(idea => {
+            const ideaCard = document.createElement('div');
+            ideaCard.className = `p-4 rounded-lg cursor-pointer border-2 border-transparent hover:bg-gray-700 ${currentIdea && currentIdea.id === idea.id ? 'bg-indigo-900/50 border-indigo-500' : 'bg-gray-900/50'}`;
+            ideaCard.innerHTML = `
+                <h4 class="font-semibold text-white">${idea.title}</h4>
+                <p class="text-sm text-gray-400">Virality Score: ${idea.score}</p>
+            `;
+            ideaCard.onclick = () => selectIdea(idea.id);
+            listContainer.appendChild(ideaCard);
+        });
+    }
+
+    function selectIdea(ideaId) {
+        currentIdea = ideas.find(i => i.id === ideaId);
+        renderIdeaList();
+        renderSelectedIdeaDetails();
+    }
+
+    function renderSelectedIdeaDetails() {
+        const panel = document.getElementById('selected-idea-panel');
+        if (!currentIdea) {
+            panel.innerHTML = `<div class="bg-gray-800 p-8 rounded-xl text-center text-gray-500">Select an idea to see the details.</div>`;
+            return;
+        }
+
+        const score = currentIdea.score;
+        const scoreColor = score >= 80 ? 'text-green-400' : score >= 60 ? 'text-yellow-400' : 'text-red-400';
+        
+        panel.innerHTML = `
+            <div class="bg-gray-800 p-6 rounded-xl">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-2">${currentIdea.title}</h3>
+                        <p class="text-gray-400">${currentIdea.description}</p>
+                    </div>
+                     <div class="flex-shrink-0 ml-4">
+                        <button class="text-gray-400 hover:text-white"><i data-feather="share-2"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl">
+                <h4 class="font-bold text-white mb-4">Virality Score & Diagnostics</h4>
+                <div class="flex items-center gap-6">
+                    <div class="relative w-32 h-32">
+                        <svg class="w-full h-full" viewBox="0 0 36 36">
+                            <path class="text-gray-700" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+                            <path class="${scoreColor.replace('text-', 'stroke-')}" stroke-dasharray="${score}, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3" stroke-linecap="round"></path>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <span class="text-3xl font-bold ${scoreColor}">${score}</span>
+                        </div>
+                    </div>
+                    <div id="score-diagnostics" class="flex-1 text-sm text-gray-400">
+                         <p>Diagnostics will appear here after analysis.</p>
+                         <p class="mt-2 text-xs text-indigo-400">Pro-Tip: Most creators publish videos scoring 70+. This is a great concept!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-xl">
+                <h4 class="font-bold text-white mb-4">Agent Actions</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button id="improve-idea-btn" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-lg text-left">
+                        <i data-feather="zap" class="text-green-400 mb-2"></i>
+                        <h5 class="font-semibold text-white">✨ Improvement Agent</h5>
+                        <p class="text-xs text-gray-400">Get suggestions to boost the score.</p>
+                    </button>
+                    <button id="variation-agent-btn" class="bg-gray-700 hover:bg-gray-600 p-4 rounded-lg text-left">
+                        <i data-feather="copy" class="text-blue-400 mb-2"></i>
+                        <h5 class="font-semibold text-white">✨ Variation Agent</h5>
+                        <p class="text-xs text-gray-400">Create 3 alternative angles.</p>
+                    </button>
+                    <button id="create-package-btn" class="col-span-1 sm:col-span-2 lg:col-span-1 bg-indigo-600 hover:bg-indigo-700 text-white p-4 rounded-lg text-left">
+                        <i data-feather="edit-3" class="mb-2"></i>
+                        <h5 class="font-semibold">✨ Scriptwriting Agent</h5>
+                        <p class="text-xs opacity-80">Create Full Production Package</p>
+                    </button>
+                </div>
+            </div>
+        `;
+        feather.replace();
+        
+        // Add event listeners for new buttons
+        document.getElementById('improve-idea-btn').onclick = improveCurrentIdea;
+        document.getElementById('variation-agent-btn').onclick = getVariations;
+        document.getElementById('create-package-btn').onclick = createProductionPackage;
+    }
+    
+    async function improveCurrentIdea() {
+        if (!currentIdea) return;
+        const prompt = `I have a viral video idea titled "${currentIdea.title}" with the description: "${currentIdea.description}".
+        Its current virality score is ${currentIdea.score}.
+        Based on the 6-part viral framework (Hook, Suspense, Stakes, Payoff, Engagement, Testability), provide a new, improved title and a new, improved description that would increase its score.
+        Format your response as a JSON object with two keys: "new_title" and "new_description". Example: {"new_title": "...", "new_description": "..."}`;
+
+        const result = await callGemini(prompt);
+        if (result) {
+            try {
+                const improvedData = JSON.parse(result.replace(/```json|```/g, ''));
+                currentIdea.title = improvedData.new_title;
+                currentIdea.description = improvedData.new_description;
+                currentIdea.score = Math.min(99, currentIdea.score + Math.floor(Math.random() * 10) + 5); // Simulate score increase
+                renderSelectedIdeaDetails();
+                showMessage('✨ Improvement Agent Activated', 'Your idea has been enhanced by the AI. The title, description, and score have been updated!');
+            } catch (e) {
+                console.error("Failed to parse improvement JSON:", e);
+                showMessage('Parsing Error', 'The AI returned an unexpected format.', 'alert-triangle', 'red');
+            }
+        }
+    }
+
+    async function getVariations() {
+        if (!currentIdea) return;
+        const prompt = `Based on the video idea "${currentIdea.title}", generate 3 creative variations. Each variation should have a different angle, hook, or tone.
+        Format the response as a JSON array of objects, where each object has "title" and "description" keys.
+        Example: [{"title": "Variation 1", "description": "..."}, {"title": "Variation 2", "description": "..."}]`;
+
+        const result = await callGemini(prompt);
+        if (result) {
+            try {
+                const variations = JSON.parse(result.replace(/```json|```/g, ''));
+                variations.forEach(v => {
+                    ideas.push({
+                        id: ideas.length + 1,
+                        title: v.title,
+                        description: v.description,
+                        score: Math.floor(Math.random() * 30) + 60 // Random score between 60-89
+                    });
+                });
+                renderIdeaList();
+                showMessage('✨ Variation Agent Summoned', 'Generated 3 new creative variations. You can find them in the "Generated Ideas" list.');
+            } catch (e) {
+                console.error("Failed to parse variations JSON:", e);
+                showMessage('Parsing Error', 'The AI returned an unexpected format.', 'alert-triangle', 'red');
+            }
+        }
+    }
+    
+    async function createProductionPackage() {
+        if (!currentIdea) return;
+        document.getElementById('asset-title').textContent = currentIdea.title;
+        renderAssets(true); // Initial render with loading state
+        navigateTo('asset-library');
+
+        const prompt = `For the viral video idea "${currentIdea.title}" (${currentIdea.description}), generate a production package.
+        Provide a response in a single JSON object with three keys: "script", "storyboard", and "production_brief".
+        - "script": A string containing a detailed, scene-by-scene script.
+        - "storyboard": A string describing a visual shot-by-shot guide.
+        - "production_brief": A string containing checklists, prop lists, and role suggestions.`;
+        
+        const result = await callGemini(prompt);
+        if (result) {
+             try {
+                const packageData = JSON.parse(result.replace(/```json|```/g, ''));
+                renderAssets(false, packageData);
+             } catch(e) {
+                console.error("Failed to parse package JSON:", e);
+                renderAssets(false, { script: "Error generating script.", storyboard: "Error generating storyboard.", production_brief: "Error generating brief." });
+                showMessage('Parsing Error', 'The AI returned an unexpected format for the production package.', 'alert-triangle', 'red');
+             }
+        } else {
+            renderAssets(false, { script: "Failed to generate script.", storyboard: "Failed to generate storyboard.", production_brief: "Failed to generate brief." });
+        }
+    }
+    
+    function renderAssets(isLoading, data = {}) {
+        const grid = document.getElementById('asset-grid');
+        const loadingText = `<div class="text-center text-gray-500"><div class="spinner mx-auto mb-2"></div>Generating...</div>`;
+        grid.innerHTML = `
+            <div class="asset-card bg-gray-800 p-6 rounded-xl">
+                <i data-feather="file-text" class="text-indigo-400 mb-3 w-8 h-8"></i>
+                <h4 class="text-xl font-bold text-white mb-2">Video Script</h4>
+                <div class="text-gray-400 text-sm mb-4 h-24 overflow-y-auto">${isLoading ? loadingText : data.script.replace(/\n/g, '<br>')}</div>
+                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">View Full Script</button>
+            </div>
+            <div class="asset-card bg-gray-800 p-6 rounded-xl">
+                <i data-feather="layout" class="text-indigo-400 mb-3 w-8 h-8"></i>
+                <h4 class="text-xl font-bold text-white mb-2">Storyboard</h4>
+                <div class="text-gray-400 text-sm mb-4 h-24 overflow-y-auto">${isLoading ? loadingText : data.storyboard.replace(/\n/g, '<br>')}</div>
+                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">View Storyboard</button>
+            </div>
+            <div class="asset-card bg-gray-800 p-6 rounded-xl">
+                <i data-feather="clipboard" class="text-indigo-400 mb-3 w-8 h-8"></i>
+                <h4 class="text-xl font-bold text-white mb-2">Production Brief</h4>
+                <div class="text-gray-400 text-sm mb-4 h-24 overflow-y-auto">${isLoading ? loadingText : data.production_brief.replace(/\n/g, '<br>')}</div>
+                <button class="w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">View Brief</button>
+            </div>
+            <div id="caption-agent-card" class="asset-card bg-gray-800 p-6 rounded-xl md:col-span-2 lg:col-span-3">
+                 <!-- Caption agent content will be injected here -->
+            </div>
+        `;
+        renderCaptionAgentCard(isLoading);
+        feather.replace();
+    }
+    
+    function renderCaptionAgentCard(isLoading, captions = "") {
+        const card = document.getElementById('caption-agent-card');
+        let content;
+        if (captions) {
+             content = `
+                <i data-feather="check-circle" class="text-green-400 mb-3 w-8 h-8"></i>
+                <h4 class="text-xl font-bold text-white mb-2">AI-Generated Captions</h4>
+                <div class="text-gray-400 text-sm mb-4 whitespace-pre-wrap">${captions}</div>
+             `;
+        } else {
+            content = `
+                 <div class="flex items-center gap-4">
+                    <i data-feather="message-square" class="text-green-400 w-8 h-8 flex-shrink-0"></i>
+                    <div>
+                        <h4 class="text-xl font-bold text-white mb-2">✨ Summon Caption Agent</h4>
+                        <p class="text-gray-400 text-sm mb-4">Generate scroll-stopping, platform-optimized captions to accompany your video.</p>
+                    </div>
+                    <button id="caption-agent-btn" class="ml-auto bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg text-sm whitespace-nowrap" ${isLoading ? 'disabled' : ''}>Generate Captions</button>
+                 </div>
+            `;
+        }
+        card.innerHTML = content;
+        feather.replace();
+        if(!captions) {
+            document.getElementById('caption-agent-btn').onclick = getCaptions;
+        }
+    }
+    
+    async function getCaptions() {
+        if (!currentIdea) return;
+        const prompt = `For the video idea "${currentIdea.title}", generate 3 social media captions. One for Instagram, one for TikTok, and one for Facebook. Use relevant hashtags. Format the response clearly with headings for each platform.`;
+        const result = await callGemini(prompt);
+        if (result) {
+            renderCaptionAgentCard(false, result);
+        }
+    }
+
+
+    // --- Event Listeners ---
+    document.getElementById('generate-ideas-btn').onclick = () => showModal('idea-wizard-modal');
+    document.getElementById('close-wizard-btn').onclick = () => hideModal('idea-wizard-modal');
+    
+    document.getElementById('find-ideas-btn').onclick = async () => {
+        const niche = document.getElementById('niche-input').value;
+        const goals = [...document.querySelectorAll('#goal-tags .selected')].map(el => el.dataset.value).join(', ');
+        const tones = [...document.querySelectorAll('#tone-tags .selected')].map(el => el.dataset.value).join(', ');
+
+        const prompt = `Generate 5 viral video ideas for a business in the "${niche}" niche.
+        The primary goal is ${goals}. The desired tone is ${tones}.
+        For each idea, provide a title, a short description, and a virality score (an integer between 60 and 95).
+        Format the response as a JSON array of objects. Each object must have these exact keys: "title", "description", "score".
+        Example: [{"title": "...", "description": "...", "score": 85}, ...]`;
+
+        const result = await callGemini(prompt);
+        if (result) {
+            try {
+                const generatedIdeas = JSON.parse(result.replace(/```json|```/g, ''));
+                ideas = generatedIdeas.map((idea, index) => ({ ...idea, id: index + 1 }));
+                hideModal('idea-wizard-modal');
+                if (ideas.length > 0) {
+                    selectIdea(ideas[0].id);
+                } else {
+                    currentIdea = null;
+                    renderIdeaList();
+                    renderSelectedIdeaDetails();
+                }
+                navigateTo('idea-workbench');
+            } catch (e) {
+                console.error("Failed to parse ideas JSON:", e);
+                showMessage('Parsing Error', 'The AI returned an unexpected format for the ideas list.', 'alert-triangle', 'red');
+            }
+        }
+    };
+    
+    document.getElementById('analyze-idea-btn').onclick = () => {
+        const userInput = document.getElementById('user-idea-input').value;
+        if(userInput.trim() === '') {
+            showMessage('Input Required', 'Please enter your video idea first.', 'alert-circle', 'yellow');
+            return;
+        }
+        ideas = [{ id: 1, title: userInput, score: 68, description: "A user-submitted idea ready for analysis and improvement." }];
+        selectIdea(1);
+        navigateTo('idea-workbench');
+    };
+
+    document.getElementById('back-to-hub-btn').onclick = () => navigateTo('idea-hub');
+    document.getElementById('back-to-workbench-btn').onclick = () => navigateTo('idea-workbench');
+    
+    document.getElementById('close-message-btn').onclick = () => hideModal('message-modal');
+    
+    document.querySelectorAll('.tag-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('selected');
+        });
+    });
+
+
+    // --- Initial Setup ---
+    renderIdeaList();
+    renderSelectedIdeaDetails();
+    navigateTo('idea-hub'); // Start at the hub
+
+</script>
+</body>
+</html>
