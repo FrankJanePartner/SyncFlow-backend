@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-from apps.social.models import SocialAccount
+from social.models import SocialAccount
 
 class AnalyticsData(models.Model):
     social_account = models.ForeignKey(
