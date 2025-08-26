@@ -1,8 +1,8 @@
 from rest_framework import generics, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import AnalyticsData
-from .serializers import AnalyticsDataSerializer
-from apps.social.models import SocialAccount
+from analytics.serializers import AnalyticsDataSerializer
+from social.models import SocialAccount
 
 class AnalyticsDataListView(generics.ListAPIView):
     serializer_class = AnalyticsDataSerializer
