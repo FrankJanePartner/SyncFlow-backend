@@ -25,6 +25,8 @@ urlpatterns = [
     
     path('api/auth/social/', include('allauth.urls')),
     
+    path('api/auth/social/', include('allauth.urls')),
+    
     # Social media features
     path('api/social/', include('social.urls')),
     
@@ -35,6 +37,7 @@ urlpatterns = [
     path('api/automations/', include('automations.urls')),
     
     # Campaigns
+<<<<<<< HEAD
     path('api/campaigns/', include('campaigns.urls')),
 
    # core
@@ -45,6 +48,18 @@ urlpatterns = [
 
     # socials
     path('api/social/', include('social.urls')),
+=======
+    path('api/campaigns/', include('apps.campaigns.urls')),
+
+   # core
+    path('api/', include('apps.core.urls')),
+    
+    # Integrations
+    path('api/integrations/', include('apps.integrations.urls')),
+
+    # socials
+    path('api/social/', include('apps.social.urls')),
+>>>>>>> f67fec8c536cd79bdb7a2eeba72fda701318a54d
    
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
