@@ -199,4 +199,4 @@ tempFolder/
 !**/migrations/__init__.py
 
 .env
-.env.example
+.env.ex
