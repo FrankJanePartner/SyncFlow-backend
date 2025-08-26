@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apps.AIs.models import LLMProvider, AIModel, AIAgent, AgentTask
+from AIs.models import LLMProvider, AIModel, AIAgent, AgentTask
 
 class AIModelInline(admin.TabularInline):
     model = AIModel

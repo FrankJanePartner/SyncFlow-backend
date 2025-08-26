@@ -1,6 +1,6 @@
 from celery import shared_task
 from django.utils import timezone
-from apps.social.models import SocialAccount, ScheduledPost
+from social.models import SocialAccount, ScheduledPost
 from huggingface_hub import InferenceClient
 import requests
 
@@ -55,8 +55,8 @@ def get_platform_data(account):
 @shared_task
 def ai_assisted_account_setup(user_id, brand_id):
     """AI-assisted social account setup"""
-    from apps.core.models import Brand
-    from apps.UserAccounts.models import User
+    from core.models import Brand
+    from UserAccounts.models import User
     
     client = InferenceClient()
     user = User.objects.get(id=user_id)
@@ -99,7 +99,7 @@ def ai_assisted_account_setup(user_id, brand_id):
 
 # from celery import shared_task
 # from django.utils import timezone
-# from apps.social.models import ScheduledPost
+# from social.models import ScheduledPost
 # from huggingface_hub import InferenceClient
 
 # @shared_task
