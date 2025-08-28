@@ -30,9 +30,8 @@ class UserProfile(models.Model):
 
 
 class EmailAddressProxy(EmailAddress):
-    class Meta:
+    class Meta:  # type: ignore[override]
         proxy = True
         verbose_name = "Email Address"
         verbose_name_plural = "Email Addresses"
         app_label = "accounts"
-
