@@ -6,7 +6,7 @@ from .models import LLMProvider, AIModel
 
 @receiver(post_migrate)
 def setup_default_llm_providers(sender, **kwargs):
-    if sender.name == 'automations':
+    if sender.name == 'apps.automations':
         for provider_config in settings.DEFAULT_LLM_PROVIDERS:
             provider, created = LLMProvider.objects.get_or_create(
                 name=provider_config['name'],

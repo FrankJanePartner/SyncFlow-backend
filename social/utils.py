@@ -1,7 +1,7 @@
 def get_auth_provider(platform):
     # This function should return the appropriate auth provider instance based on the platform
     # Placeholder implementation, replace with actual provider retrieval logic
-    from social.auth_providers.facebook import FacebookAuthProvider
+    from apps.social.auth_providers.facebook import FacebookAuthProvider
 
     if platform == 'facebook':
         return FacebookAuthProvider()

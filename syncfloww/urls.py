@@ -25,8 +25,6 @@ urlpatterns = [
     
     path('api/auth/social/', include('allauth.urls')),
     
-    path('api/auth/social/', include('allauth.urls')),
-    
     # Social media features
     path('api/social/', include('social.urls')),
     
