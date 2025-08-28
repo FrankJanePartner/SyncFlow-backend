@@ -154,6 +154,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 
+
 LOGIN_URL = '/accounts/login/'
 SIGNUP_URL = '/accounts/signup/'
 LOGIN_REDIRECT_URL = '/'
@@ -163,6 +164,7 @@ ACCOUNT_LOGIN_REDIRECT_URL = '/'
 # USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
+LOGIN_METHODS = ["email"]
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = "email"   # if you want login via email only
