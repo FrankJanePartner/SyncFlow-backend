@@ -142,20 +142,27 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # dj-allauth / dj-rest-auth email login settings
-# # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-AUTH_USER_MODEL = "UserAccount.CustomUser"
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
 
 ACCOUNT_SESSION_REMEMBER = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+
 
 LOGIN_URL = '/accounts/login/'
 SIGNUP_URL = '/accounts/signup/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_LOGIN_REDIRECT_URL = '/'
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
-ACCOUNT_LOGIN_METHODS = {'email'}
 # ACCOUNT_EMAIL_REQUIRED = True
 # ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = "email"   # if you want login via email only
