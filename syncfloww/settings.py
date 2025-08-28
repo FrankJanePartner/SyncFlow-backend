@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-
 DEBUG = False
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://syncfloww-backend-w4pw.onrender.com']
 
 # Installed Django applications
 INSTALLED_APPS = [
