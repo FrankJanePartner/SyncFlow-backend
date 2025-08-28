@@ -22,10 +22,10 @@ SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-
 
 
 # Debug mode flag (False in base settings, overridden in development)
-DEBUG = False
+DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ['https://syncfloww-backend-w4pw.onrender.com']
+ALLOWED_HOSTS = ["*"]
 
 # Installed Django applications
 INSTALLED_APPS = [
