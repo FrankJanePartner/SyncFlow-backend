@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = []#"*"]
+ALLOWED_HOSTS = ["*"]
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -187,7 +187,7 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
