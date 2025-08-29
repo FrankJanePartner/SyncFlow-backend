@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []#"*"]
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -149,25 +149,20 @@ AUTHENTICATION_BACKENDS = (
 
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'.
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 
-
 LOGIN_URL = '/accounts/login/'
 SIGNUP_URL = '/accounts/signup/'
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
-ACCOUNT_LOGIN_REDIRECT_URL = '/'
+# LOGIN_REDIRECT_URL = '/'
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+# ACCOUNT_LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-# USER_MODEL_USERNAME_FIELD = None
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
 LOGIN_METHODS = ["email"]
-# ACCOUNT_EMAIL_REQUIRED = True
-# ACCOUNT_USERNAME_REQUIRED = False
-# ACCOUNT_AUTHENTICATION_METHOD = "email"   # if you want login via email only
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -177,8 +172,13 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
+
+
+
 # Login only with email
+
 # EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_PORT = env.int('EMAIL_PORT')
@@ -187,7 +187,7 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
