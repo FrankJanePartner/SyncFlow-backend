@@ -374,42 +374,34 @@ DEFAULT_LLM_PROVIDERS = [
         'base_url': 'https://api.openai.com/v1'
     }
 ]
-# settings.py
 
-CSP_DEFAULT_SRC = ("'self'",)
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "connect-src": (
+            "'self'",
+            "https://syncfloww-backend-w4pw.onrender.com",
+            "https://api-inference.huggingface.co",
+            "https://api.openai.com",
+            "http://localhost:8000",
+            "https://preview--prompt-reach-ai.lovable.app",
+        ),
+        "font-src": ("'self'", "https://fonts.gstatic.com"),
+        "img-src": ("'self'", "data:", "https://your-cdn.com"),
+        "script-src": (
+            "'self'",
+            "https://cdn.jsdelivr.net",
+            "https://unpkg.com",
+            "'unsafe-inline'",  # ⚠️ Avoid in production if possible
+        ),
+        "style-src": (
+            "'self'",
+            "https://fonts.googleapis.com",
+            "'unsafe-inline'",  # ⚠️ Avoid if possible
+        ),
+    }
+}
 
-CSP_SCRIPT_SRC = (
-    "'self'",
-    "https://cdn.jsdelivr.net",
-    "https://unpkg.com",
-    "'unsafe-inline'",  # ⚠️ avoid if possible, use hashes instead
-)
-
-CSP_STYLE_SRC = (
-    "'self'",
-    "https://fonts.googleapis.com",
-    "'unsafe-inline'",  # ⚠️ same note as above
-)
-
-CSP_FONT_SRC = (
-    "'self'",
-    "https://fonts.gstatic.com",
-)
-
-CSP_IMG_SRC = (
-    "'self'",
-    "data:",
-    "https://your-cdn.com",  # replace with your actual CDN or image hosting
-)
-
-CSP_CONNECT_SRC = (
-    "'self'",
-    "https://syncfloww-backend-w4pw.onrender.com",
-    "https://api-inference.huggingface.co",
-    "https://api.openai.com",
-    "http://localhost:8000",  # include full scheme
-    "https://preview--prompt-reach-ai.lovable.app",
-)
 
 
 # Logging configuration (commented out)
