@@ -130,6 +130,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'myappsa9@gmail.com'
+EMAIL_HOST_PASSWORD = 'pcad ujpi hmxw ltxz'
+DEFAULT_FROM_EMAIL = 'no-reply@syncflow.com'
+
+
 # Site ID for django.contrib.sites
 SITE_ID = 1
 
@@ -172,20 +182,6 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
 
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
-
-
-
-# Login only with email
-
-# EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
-
-EMAIL_BACKEND = env('EMAIL_BACKEND')
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env.int('EMAIL_PORT')
-EMAIL_USE_TLS = env('EMAIL_USE_TLS')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
