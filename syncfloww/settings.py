@@ -139,6 +139,40 @@ EMAIL_HOST_USER = 'myappsa9@gmail.com'
 EMAIL_HOST_PASSWORD = 'pcad ujpi hmxw ltxz'
 DEFAULT_FROM_EMAIL = 'no-reply@syncflow.com'
 
+# CORS allowed origins for cross-origin requests
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "https://syncflow-frontend-production.up.railway.app",
+    "http://localhost:3000",   # keep if you also dev locally
+    "http://localhost:5173",
+    "https://preview--prompt-reach-ai.lovable.app"
+]
+
+# CORS allowed origins (alternative, commented out)
+# CORS_ALLOWED_ORIGINS = [
+#     env('FRONTEND_URL'),
+# ]
+
+# CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Trusted origins for CSRF protection
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8080",
+    "http://localhost:8000",
+    "https://syncflow-frontend-production.up.railway.app",
+    "http://localhost:3000",   # keep if you also dev locally
+    "http://localhost:5173",
+]
+
+# Cookie settings for session and CSRF
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
 
 # Site ID for django.contrib.sites
 SITE_ID = 1
@@ -285,38 +319,6 @@ SPECTACULAR_SETTINGS = {
     'VERSION': env('SPECTACULAR_SETTINGS_VERSION'),
     'SERVE_INCLUDE_SCHEMA': False,
 }
-
-# CORS allowed origins for cross-origin requests
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8000",
-    "https://syncflow-frontend-production.up.railway.app",
-    "http://localhost:3000",   # keep if you also dev locally
-    "http://localhost:5173",
-    "https://preview--prompt-reach-ai.lovable.app"
-]
-
-# CORS allowed origins (alternative, commented out)
-# CORS_ALLOWED_ORIGINS = [
-#     env('FRONTEND_URL'),
-# ]
-
-# Allow credentials in CORS requests
-CORS_ALLOW_CREDENTIALS = True
-# Trusted origins for CSRF protection
-CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8000",
-    "https://syncflow-frontend-production.up.railway.app",
-    "http://localhost:3000",   # keep if you also dev locally
-    "http://localhost:5173",
-]
-
-# Cookie settings for session and CSRF
-SESSION_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
 
 # Celery configuration for asynchronous task queue
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
