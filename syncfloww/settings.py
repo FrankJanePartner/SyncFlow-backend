@@ -291,9 +291,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
     "https://syncflow-frontend-production.up.railway.app",
-    "https://preview--prompt-reach-ai.lovable.app",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
+    "https://preview--prompt-reach-ai.lovable.app"
 ]
 
 # CORS allowed origins (alternative, commented out)
@@ -308,7 +308,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
     "https://syncflow-frontend-production.up.railway.app",
-    "https://preview--prompt-reach-ai.lovable.app",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
 ]
