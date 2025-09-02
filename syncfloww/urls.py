@@ -52,7 +52,7 @@ urlpatterns = [
     path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
 
     #Favicon path
-    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
+    path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('/favicon.ico'))),
 ]
 
 # static files (when using runserver with --insecure)
