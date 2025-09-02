@@ -198,8 +198,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 
 
-LOGIN_URL = '/accounts/login/'
-SIGNUP_URL = '/accounts/signup/'
+LOGIN_URL = '/api/accounts/auth/login/'
+SIGNUP_URL = '/api/accounts/auth/register/'
 # LOGIN_REDIRECT_URL = '/'
 # ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 # ACCOUNT_LOGIN_REDIRECT_URL = '/'
