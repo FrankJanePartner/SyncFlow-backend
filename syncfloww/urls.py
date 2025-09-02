@@ -23,8 +23,8 @@ urlpatterns = [
     # Authentication and user management
     path('api/accounts/', include('UserAccount.urls', namespace='accounts')),
     
-    path('api/accounts/auth/', include('allauth.urls')),
-    path('api/accounts/auth/', include('dj-auth_rest.urls')),
+    # path('api/accounts/auth/', include('allauth.urls')),
+    # path('api/accounts/auth/', include('dj-auth_rest.urls')),
     
     # Social media features
     path('api/social/', include('social.urls')),

@@ -1,56 +1,25 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from django.contrib.auth.models import Group
-from allauth.account.models import EmailAddress
-from django.contrib.admin import ModelAdmin
-from .models import UserProfile
+from django.contrib.auth.admin import UserAdmin
+from .models import UserAccount, UserProfile
 
-# class CustomUserAdmin(BaseUserAdmin):
-#     model = CustomUser
-#     list_display = ['email', 'is_staff', 'is_active']
-#     list_filter = ['is_staff', 'is_active']
-#     ordering = ['email']
-#     search_fields = ['email']
-#     fieldsets = (
-#         (None, {'fields': ('email', 'password')}),
-#         ('Permissions', {'fields': ('is_staff', 'is_active', 'groups', 'user_permissions')}),
-#     )
-#     add_fieldsets = (
-#         (None, {
-#             'classes': ('wide',),
-#             'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
-#         ),
-#     )
+class UserAccountAdmin(UserAdmin):
+    model = UserAccount
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_active')
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email',)
+    fieldsets = (
+        (None, {'fields': ('email', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'is_superuser', 'groups', 'user_permissions')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password', 'password2'),
+        }),
+    )
 
-# # Unregister Group if registered
-# try:
-#     admin.site.unregister(Group)
-# except admin.sites.NotRegistered:
-#     pass
-
-# # Unregister EmailAddress to avoid separate admin section
-# try:
-#     admin.site.unregister(EmailAddress)
-# except admin.sites.NotRegistered:
-#     pass
-
-# # Custom admin for EmailAddress to show under accounts app label
-# class EmailAddressAdmin(ModelAdmin):
-#     def get_app_label(self, request):
-#         return "accounts"
-
-# # Register User, CustomUser, and EmailAddress under accounts app
-# try:
-#     admin.site.register(CustomUser, CustomUserAdmin)
-# except admin.sites.AlreadyRegistered:
-#     pass
-
-# try:
-#     admin.site.register(UserProfile)
-# except admin.sites.AlreadyRegistered:
-#     pass
-
-# try:
-#     admin.site.register(EmailAddress, EmailAddressAdmin)
-# except admin.sites.AlreadyRegistered:
-#     pass
+admin.site.register(UserAccount, UserAccountAdmin)
+admin.site.register(UserProfile)

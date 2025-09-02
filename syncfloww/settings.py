@@ -101,6 +101,10 @@ TEMPLATES = [
     },
 ]
 
+
+AUTH_USER_MODEL = "UserAccount.UserAccount"
+
+
 # WSGI application callable
 WSGI_APPLICATION = 'syncfloww.wsgi.application'
 
@@ -192,21 +196,22 @@ AUTHENTICATION_BACKENDS = (
 )
 
 ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_USERNAME_REQUIRED = False
+# ACCOUNT_USERNAME_REQUIRED = False
 # ACCOUNT_AUTHENTICATION_METHOD = 'email'.
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
 
 LOGIN_URL = '/api/accounts/auth/login/'
 SIGNUP_URL = '/api/accounts/auth/register/'
-# LOGIN_REDIRECT_URL = '/'
-# ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
-# ACCOUNT_LOGIN_REDIRECT_URL = '/'
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-
+ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
-LOGIN_METHODS = ["email"]
+
+REST_AUTH = {
+    'USE_JWT': True,
+    'REGISTER_SERIALIZER': 'UserAccount.serializers.CustomRegisterSerializer',
+}
+
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True

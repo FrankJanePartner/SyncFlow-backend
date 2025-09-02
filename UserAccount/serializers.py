@@ -7,7 +7,6 @@ from .models import UserProfile
 User = get_user_model()
 
 class CustomRegisterSerializer(RegisterSerializer):
-    username = None
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
 
@@ -21,12 +20,9 @@ class CustomRegisterSerializer(RegisterSerializer):
 
     def save(self, request):
         user = super().save(request)
-        # Create user profile
-        UserProfile.objects.create(
-            user=user,
-            first_name=self.validated_data.get('first_name'),
-            last_name=self.validated_data.get('last_name'),
-        )
+        user.first_name = self.validated_data.get('first_name', '')
+        user.last_name = self.validated_data.get('last_name', '')
+        user.save()
         return user
 
 class UserSerializer(serializers.ModelSerializer):
