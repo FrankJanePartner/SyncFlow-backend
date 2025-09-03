@@ -195,16 +195,6 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-ACCOUNT_SESSION_REMEMBER = True
-ACCOUNT_USER_MODEL_USERNAME_FIELD = "email"
-
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
-ACCOUNT_LOGIN_METHODS = {"email"}
-
-REST_AUTH = {
-    'USE_JWT': True,
-    'REGISTER_SERIALIZER': 'UserAccount.serializers.CustomRegisterSerializer',
-}
 
 
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
@@ -221,6 +211,15 @@ SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
 
+ACCOUNT_SESSION_REMEMBER = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# EMAIL_REQUIRED = True
+# USERNAME_REQUIRED = False
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
+
+
 # REST auth configuration
 REST_AUTH = {
     'USE_JWT': True,
@@ -234,13 +233,6 @@ REST_AUTH = {
     'PASSWORD_CHANGE_SERIALIZER': 'UserAccount.serializers.CustomPasswordChangeSerializer',
 }
 
-# Simple JWT settings for token lifetimes and rotation
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-}
 
 # Social account providers configuration for OAuth
 SOCIALACCOUNT_PROVIDERS = {
@@ -310,6 +302,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
 }
+
+
 
 # DRF Spectacular API schema settings
 SPECTACULAR_SETTINGS = {
@@ -399,6 +393,14 @@ CONTENT_SECURITY_POLICY = {
 }
 
 
+# Simple JWT settings (optional customization)
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 # Logging configuration (commented out)
 # # LOGGING = {
