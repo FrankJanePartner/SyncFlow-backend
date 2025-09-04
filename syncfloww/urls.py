@@ -21,13 +21,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     
     # Authentication and user management
-    path('api/accounts/', include('UserAccount.urls', namespace='accounts')),
+    path('api/auth/', include('UserAccount.urls', namespace='accounts')),
     
-    path('api/auth/', include('dj_rest_auth.urls')),  # login, logout, password change/reset
-    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # signup, email verification
-    path('api/auth/social/', include('allauth.socialaccount.providers.google.urls')),  # social auth
-    path('api/auth/social/', include('allauth.socialaccount.providers.facebook.urls')),
-    path('api/auth/social/', include('allauth.socialaccount.providers.apple.urls')),    
+    # path('api/auth/', include('dj_rest_auth.urls')),  # login, logout, password change/reset
+    # path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # signup, email verification
+    # path('api/auth/social/', include('allauth.socialaccount.providers.google.urls')),  # social auth
+    # path('api/auth/social/', include('allauth.socialaccount.providers.facebook.urls')),
+    # path('api/auth/social/', include('allauth.socialaccount.providers.apple.urls')),    
+
     # Social media features
     path('api/social/', include('social.urls')),
     

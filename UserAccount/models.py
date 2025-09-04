@@ -1,67 +1,59 @@
-from __future__ import annotations
-from typing import Any, Optional, TypeVar
 from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import User
-from allauth.account.models import EmailAddress
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth import models as auth_models
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
+
+class UserManager(auth_models.BaseUserManager):
+    def create_user(
+        self,
+        first_name: str,
+        last_name: str,
+        email: str,
+        password: str = None,
+        is_staff=False,
+        is_superuser=False,
+    ) -> "User":
         if not email:
-            raise ValueError("Email is required")
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
+            raise ValueError("User must have an email")
+        if not first_name:
+            raise ValueError("User must have a first name")
+        if not last_name:
+            raise ValueError("User must have a last name")
+
+        user = self.model(email=self.normalize_email(email))
+        user.first_name = first_name
+        user.last_name = last_name
         user.set_password(password)
-        user.save(using=self._db)
+        user.is_active = True
+        user.is_staff = is_staff
+        user.is_superuser = is_superuser
+        user.save()
+
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        return self.create_user(email, password, **extra_fields)
+    def create_superuser(
+        self, first_name: str, last_name: str, email: str, password: str
+    ) -> "User":
+        user = self.create_user(
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            password=password,
+            is_staff=True,
+            is_superuser=True,
+        )
+        user.save()
+
+        return user
 
 
-class UserAccount(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=150, blank=True)
-    last_name = models.CharField(max_length=150, blank=True)
-    is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+class User(auth_models.AbstractUser):
+    first_name = models.CharField(verbose_name="First Name", max_length=255)
+    last_name = models.CharField(verbose_name="Last Name", max_length=255)
+    email = models.EmailField(verbose_name="Email", max_length=255, unique=True)
+    password = models.CharField(max_length=255)
+    username = None
 
-    objects = CustomUserManager()
+    objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(
-        UserAccount,
-        related_name="profile",
-        on_delete=models.CASCADE,
-    )
-    company = models.CharField(max_length=255, blank=True)
-    phone = models.CharField(max_length=20, blank=True)
-    address = models.TextField(blank=True)
-    website = models.URLField(blank=True)
-    bio = models.TextField(blank=True)
-    timezone = models.CharField(max_length=50, blank=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self) -> str:
-        return f"{self.user.email}'s profile"
-
-    class Meta:
-        verbose_name = "User Profile"
-        verbose_name_plural = "User Profiles"
-
-
-class EmailAddressProxy(EmailAddress):
-    class Meta:  # type: ignore[override]
-        proxy = True
-        verbose_name = "Email Address"
-        verbose_name_plural = "Email Addresses"
-        app_label = "accounts"
+    REQUIRED_FIELDS = ["first_name", "last_name"]

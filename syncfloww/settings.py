@@ -4,28 +4,20 @@ from datetime import timedelta
 import environ
 from .social_config import SOCIAL_AUTH_CONFIGS
 
-# Load environment variables from .env file
-env = environ.Env()
-environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env')
-
-# Base directory of the projectfrom pathlib import Path
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(BASE_DIR / '.env')
+env = environ.Env()
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^c&x94b&90z82ckyu04-8dki$@9)2q33-oh4n4qp6%e687wr*-'
+SECRET_KEY = env("SECRET_KEY")
+JWT_SECRET = env("JWT_SECRET")
 
 
 # Debug mode flag (False in base settings, overridden in development)
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"]#"https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000"]
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -41,16 +33,15 @@ INSTALLED_APPS = [
     # Third-party apps
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
+    # 'dj_rest_auth',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.apple',
-    'dj_rest_auth.registration',
-    'drf_spectacular',
+    # 'dj_rest_auth.registration',
+    # 'drf_spectacular',
     'django_celery_beat',
     'csp',
 
@@ -64,6 +55,7 @@ INSTALLED_APPS = [
     'integrations',
     'social',
     'UserAccount',
+    'status',
 ]
 
 # Middleware configuration
@@ -102,8 +94,7 @@ TEMPLATES = [
 ]
 
 
-AUTH_USER_MODEL = "UserAccount.UserAccount"
-
+AUTH_USER_MODEL = "UserAccount.User"
 
 # WSGI application callable
 WSGI_APPLICATION = 'syncfloww.wsgi.application'
@@ -140,14 +131,14 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'myappsa9@gmail.com'
-EMAIL_HOST_PASSWORD = 'pcad ujpi hmxw ltxz'
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = 'no-reply@syncflow.com'
 
 # CORS allowed origins for cross-origin requests
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
-    "https://syncflow-frontend-production.up.railway.app",
+    "https://syncfloww.onrender.com",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
     "https://preview--prompt-reach-ai.lovable.app"
@@ -158,7 +149,6 @@ CORS_ALLOWED_ORIGINS = [
 #     env('FRONTEND_URL'),
 # ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -166,7 +156,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
-    "https://syncflow-frontend-production.up.railway.app",
+    "https://syncfloww.onrender.com",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
 ]
@@ -174,8 +164,8 @@ CSRF_TRUSTED_ORIGINS = [
 # Cookie settings for session and CSRF
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = False
-CSRF_COOKIE_SECURE = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 
 
 # Site ID for django.contrib.sites
@@ -195,83 +185,13 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-
-
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
-
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True
-
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
-
-
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-
-ACCOUNT_SESSION_REMEMBER = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-# EMAIL_REQUIRED = True
-# USERNAME_REQUIRED = False
-
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'first_name*', 'last_name*', 'password1*', 'password2*']
-
-
-# REST auth configuration
-REST_AUTH = {
-    'USE_JWT': True,
-    'JWT_AUTH_COOKIE': 'syncfloww-auth',
-    'JWT_AUTH_REFRESH_COOKIE': 'syncfloww-refresh-token',
-    'JWT_AUTH_HTTPONLY': False,
-    'SESSION_LOGIN': False,
-    'REGISTER_SERIALIZER': 'UserAccount.serializers.CustomRegisterSerializer',
-    'USER_DETAILS_SERIALIZER': 'UserAccount.serializers.UserSerializer',
-    'PASSWORD_RESET_CONFIRM_URL': 'auth/password-reset-confirm/{uid}/{token}',
-    'PASSWORD_CHANGE_SERIALIZER': 'UserAccount.serializers.CustomPasswordChangeSerializer',
-}
-
-
-# Social account providers configuration for OAuth
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    },
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
-        'FIELDS': [
-            'id',
-            'email',''
-            'name',
-            'first_name',
-            'last_name',
-            'verified',
-            'locale',
-            'timezone',
-            'link',
-            'gender',
-            'updated_time',
-        ]
-    }
-}
-
-# Social account providers with app credentials loaded from environment variables
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
         'APP': {
-            'client_id': '699745756873-153o4ff332apu60s7gnj4qf7mtfttofk.apps.googleusercontent.com',
-            'secret': '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',
+            'client_id': env('GOOGLE_OAUTH2_CLIENT_ID'),
+            'secret': env('GOOGLE_OAUTH2_CLIENT_SECRET'),
             'key': ''
         }
     },
@@ -279,39 +199,13 @@ SOCIALACCOUNT_PROVIDERS = {
         'METHOD': 'oauth2',
         'SCOPE': ['email', 'public_profile'],
         'APP': {
-            'client_id': env('FACEBOOK_APP_ID'), 
+            'client_id': env('FACEBOOK_APP_ID'),
             'secret': env('FACEBOOK_APP_SECRET'),
             'key': ''
         }
     }
 }
 
-# Django REST Framework settings for authentication, pagination, filtering, and permissions
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ("rest_framework_simplejwt.authentication.JWTAuthentication",),
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
-        'rest_framework.filters.OrderingFilter',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-        'rest_framework.permissions.AllowAny',
-    ],
-}
-
-
-
-# DRF Spectacular API schema settings
-SPECTACULAR_SETTINGS = {
-    'TITLE': env('SPECTACULAR_SETTINGS_TITLE'),
-    'DESCRIPTION': env('SPECTACULAR_SETTINGS_DESCRIPTION'),
-    'VERSION': env('SPECTACULAR_SETTINGS_VERSION'),
-    'SERVE_INCLUDE_SCHEMA': False,
-}
 
 # Celery configuration for asynchronous task queue
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
@@ -331,16 +225,6 @@ CONTENT_SECURITY_POLICY = {
     }
 }
 
-# Custom account adapter for user account management
-ACCOUNT_ADAPTER = 'UserAccount.adapters.CustomAccountAdapter'
-
-# DRF Spectacular API documentation settings
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'SyncflowwAI API',
-    'DESCRIPTION': 'API for SyncflowwAI social media marketing platform',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
 
 # Social authentication configurations imported from social_config module
 SOCIAL_AUTH_CONFIGS = SOCIAL_AUTH_CONFIGS
@@ -354,7 +238,7 @@ DEFAULT_LLM_PROVIDERS = [
     {
         'name': 'HuggingFace',
         'provider_class': 'automations.providers.huggingface.HuggingFaceProvider',
-        'api_key_env': 'HUGGINGFACE_API_KEY',
+        'api_key_env': env('HUGGINGFACE_API_KEY'),
         'base_url': 'https://api-inference.huggingface.co'
     },
     {
@@ -374,6 +258,7 @@ CONTENT_SECURITY_POLICY = {
             "https://api-inference.huggingface.co",
             "https://api.openai.com",
             "http://localhost:8000",
+            "http://localhost:8080",
             "https://preview--prompt-reach-ai.lovable.app",
         ),
         "font-src": ("'self'", "https://fonts.gstatic.com"),
@@ -392,15 +277,6 @@ CONTENT_SECURITY_POLICY = {
     }
 }
 
-
-# Simple JWT settings (optional customization)
-from datetime import timedelta
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
 
 # Logging configuration (commented out)
 # # LOGGING = {

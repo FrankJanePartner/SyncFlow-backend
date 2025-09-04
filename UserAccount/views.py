@@ -70,6 +70,7 @@ class CustomRegisterView(RegisterView):
                 return Response({"error": "A user with this email already exists."}, status=status.HTTP_400_BAD_REQUEST)
             return Response({"error": "Registration failed."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 # class CustomVerifyEmailView(VerifyEmailView):
 #     def get(self, request, *args, **kwargs): # type: ignore[override]
 #         key = kwargs.get('key')

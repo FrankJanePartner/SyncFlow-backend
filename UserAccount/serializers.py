@@ -7,6 +7,7 @@ from .models import UserProfile
 User = get_user_model()
 
 class CustomRegisterSerializer(RegisterSerializer):
+    email = serializers.EmailField(unique=True, required=True)
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
 
