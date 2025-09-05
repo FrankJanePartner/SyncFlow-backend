@@ -10,22 +10,26 @@ class BrandPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
+from typing import Any
+from rest_framework.request import Request
+from rest_framework.response import Response
+
 class BrandListCreateView(generics.ListCreateAPIView):
     serializer_class = BrandSerializer
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = BrandPagination
 
-    def get_queryset(self):
+    def get_queryset(self) -> Any:
         return Brand.objects.filter(user=self.request.user)
 
-    def perform_create(self, serializer):
+    def perform_create(self, serializer) -> None:
         serializer.save(user=self.request.user)
 
 class BrandDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = BrandSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def get_queryset(self) -> Any:
         return Brand.objects.filter(user=self.request.user)
 
 
