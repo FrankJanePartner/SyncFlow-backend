@@ -10,6 +10,8 @@ from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from django.contrib.staticfiles.storage import staticfiles_storage
 
+# from syncflowbackend.UserAccount import views
+
 admin.site.site_header = 'SyncFloww'
 admin.site.site_title = 'SyncFloww Admin Panel'
 admin.site.index_title = 'SyncFloww Administration'
@@ -22,15 +24,7 @@ urlpatterns = [
     
     # Authentication and user management
     path('api/auth/', include('UserAccount.urls', namespace='accounts')),
-    
-    # path('api/auth/', include('dj_rest_auth.urls')),  # login, logout, password change/reset
-    # path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # signup, email verification
-    # path('api/auth/social/', include('allauth.socialaccount.providers.google.urls')),  # social auth
-    # path('api/auth/social/', include('allauth.socialaccount.providers.facebook.urls')),
-    # path('api/auth/social/', include('allauth.socialaccount.providers.apple.urls')),    
-
-    # Social media features
-    path('api/social/', include('social.urls')),
+    path("api/social_auth/", include('social_django.urls', namespace="social_auth")),  
     
     # Analytics
     path('api/analytics/', include('analytics.urls')),

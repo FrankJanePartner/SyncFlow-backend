@@ -1,5 +1,5 @@
 from django.urls import path
-
+# from .views import FacebookLogin, GoogleLogin, AppleLogin
 from . import apis
 
 app_name = "accounts"

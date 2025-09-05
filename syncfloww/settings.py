@@ -11,6 +11,7 @@ env = environ.Env()
 
 SECRET_KEY = env("SECRET_KEY")
 JWT_SECRET = env("JWT_SECRET")
+JWT_AUTH_COOKIE = JWT_SECRET  # Cookie name. Enables cookies if value is not None
 
 
 # Debug mode flag (False in base settings, overridden in development)
@@ -33,15 +34,7 @@ INSTALLED_APPS = [
     # Third-party apps
     'corsheaders',
     'rest_framework',
-    # 'dj_rest_auth',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.apple',
-    # 'dj_rest_auth.registration',
-    # 'drf_spectacular',
+    'social_django',
     'django_celery_beat',
     'csp',
 
@@ -63,7 +56,6 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -71,7 +63,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
+    "social_django.middleware.SocialAuthExceptionMiddleware",
 ]
+
 
 # Root URL configuration module
 ROOT_URLCONF = 'syncfloww.urls'
@@ -179,34 +173,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# dj-allauth / dj-rest-auth email login settings
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-        'APP': {
-            'client_id': env('GOOGLE_OAUTH2_CLIENT_ID'),
-            'secret': env('GOOGLE_OAUTH2_CLIENT_SECRET'),
-            'key': ''
-        }
-    },
-    'facebook': {
-        'METHOD': 'oauth2',
-        'SCOPE': ['email', 'public_profile'],
-        'APP': {
-            'client_id': env('FACEBOOK_APP_ID'),
-            'secret': env('FACEBOOK_APP_SECRET'),
-            'key': ''
-        }
-    }
-}
-
-
 # Celery configuration for asynchronous task queue
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND')
@@ -278,6 +244,29 @@ CONTENT_SECURITY_POLICY = {
 }
 
 
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.apple.AppleIdAuth',
+    'social_core.backends.open_id.OpenIdAuth',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+
+
+SOCIAL_AUTH_URL_NAMESPACE = 'social_auth'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY =  env('GOOGLE_OAUTH2_CLIENT_ID')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('GOOGLE_OAUTH2_CLIENT_SECRET')
+
+SOCIAL_AUTH_FACEBOOK_KEY = env('FACEBOOK_APP_ID')
+SOCIAL_AUTH_FACEBOOK_SECRET = env('FACEBOOK_APP_SECRET')
+
+# SOCIAL_AUTH_APPLE_ID = env('APPLE_CLIENT_ID')
+# SOCIAL_AUTH_APPLE_SECRET = env('APPLE_CLIENT_SECRET')
+
+
 # Logging configuration (commented out)
 # # LOGGING = {
 # #     'version': 1,
@@ -295,5 +284,7 @@ CONTENT_SECURITY_POLICY = {
 # #         },
 # #     },
 # # }
+
+
 
 
