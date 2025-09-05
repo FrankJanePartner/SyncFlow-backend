@@ -139,12 +139,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://preview--prompt-reach-ai.lovable.app"
 ]
 
-# CORS allowed origins (alternative, commented out)
-# CORS_ALLOWED_ORIGINS = [
-#     env('FRONTEND_URL'),
-# ]
-
-
 CORS_ALLOW_CREDENTIALS = True
 
 # Trusted origins for CSRF protection
