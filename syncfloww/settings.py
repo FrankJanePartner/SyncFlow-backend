@@ -256,6 +256,9 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # disable during dev
+ACCOUNT_EMAIL_REQUIRED = True
+
 
 SOCIAL_AUTH_URL_NAMESPACE = 'social_auth'
 
@@ -267,8 +270,14 @@ SOCIAL_AUTH_FACEBOOK_SECRET = env('FACEBOOK_APP_SECRET')
 
 # SOCIAL_AUTH_APPLE_ID = env('APPLE_CLIENT_ID')
 # SOCIAL_AUTH_APPLE_SECRET = env('APPLE_CLIENT_SECRET')
+  # replace with env var in production
 
-REST_USE_JWT = True
+# Authentication classes
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "UserAccount.authentication.CustomUserAuthentication",
+    ),
+}
 
 # Logging configuration (commented out)
 # # LOGGING = {
