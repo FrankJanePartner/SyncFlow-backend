@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.auth import models as auth_models
+from typing import Optional
 
 
 class UserManager(auth_models.BaseUserManager):
     def create_user(
         self,
         email: str,
-        password: str = None,
+        password: Optional[str] = None,
         first_name: str = "",
         last_name: str = "",
         is_staff=False,
@@ -43,13 +44,14 @@ class UserManager(auth_models.BaseUserManager):
 
 
 class User(auth_models.AbstractUser):
+    id = models.AutoField(primary_key=True)
     first_name = models.CharField(verbose_name="First Name", max_length=255, blank=True)
     last_name = models.CharField(verbose_name="Last Name", max_length=255, blank=True)
     email = models.EmailField(verbose_name="Email", max_length=255, unique=True)
     password = models.CharField(max_length=255)
     username = None  # disable username field
 
-    objects = UserManager()
+    objects = UserManager()  # type: ignore
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []  # don’t require first/last name for createsuperuser

@@ -14,7 +14,6 @@ class RegisterApi(views.APIView):
         serializer = user_serializer.UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Convert dict → dataclass
         data = serializer.validated_data
         user_dc = UserDataClass(**data)
 
@@ -22,7 +21,10 @@ class RegisterApi(views.APIView):
         serializer.instance = services.create_user(user_dc=user_dc)
 
         # Auto-issue JWT
-        token = services.create_token(user_id=serializer.instance.id)
+        if serializer.instance.id is not None:
+            token = services.create_token(user_id=serializer.instance.id)
+        else:
+            raise exceptions.ValidationError("User ID is not available.")
 
         return response.Response(
             {
@@ -52,7 +54,10 @@ class LoginApi(views.APIView):
         if user is None or not user.check_password(raw_password=password):
             raise exceptions.AuthenticationFailed("Invalid credentials.")
 
-        token = services.create_token(user_id=user.id)
+        if user.id is not None:
+            token = services.create_token(user_id=user.id)
+        else:
+            raise exceptions.AuthenticationFailed("User ID is not available.")
 
         resp = response.Response(
             {

@@ -1,12 +1,11 @@
 import dataclasses
 import datetime
 import jwt
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from django.conf import settings
 from . import models
 
-if TYPE_CHECKING:
-    from .models import User
+# from .models import User  # Avoid circular import
 
 
 @dataclasses.dataclass
@@ -14,11 +13,11 @@ class UserDataClass:
     first_name: str
     last_name: str
     email: str
-    password: str = None
-    id: int = None
+    password: Optional[str] = None
+    id: Optional[int] = None
 
     @classmethod
-    def from_instance(cls, user: "User") -> "UserDataClass":
+    def from_instance(cls, user: models.User) -> "UserDataClass":
         return cls(
             first_name=user.first_name,
             last_name=user.last_name,
@@ -39,7 +38,9 @@ def create_user(user_dc: "UserDataClass") -> "UserDataClass":
     return UserDataClass.from_instance(instance)
 
 
-def user_email_selector(email: str) -> "User":
+from typing import Optional as TypingOptional
+
+def user_email_selector(email: str) -> Optional[models.User]:
     user = models.User.objects.filter(email=email).first()
 
     return user
