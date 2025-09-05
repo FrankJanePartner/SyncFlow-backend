@@ -20,7 +20,7 @@ JWT_AUTH_COOKIE = JWT_SECRET  # Cookie name. Enables cookies if value is not Non
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000"]
+ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000", 'syncfloww.onrender.com']
 
 # Installed Django applications
 INSTALLED_APPS = [
