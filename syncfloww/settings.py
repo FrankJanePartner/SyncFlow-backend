@@ -12,8 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env("SECRET_KEY")
-JWT_SECRET = env("JWT_SECRET")
-JWT_AUTH_COOKIE = JWT_SECRET  # Cookie name. Enables cookies if value is not None
+JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-key")
 
 
 # Debug mode flag (False in base settings, overridden in development)
