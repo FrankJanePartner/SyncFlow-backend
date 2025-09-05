@@ -2,12 +2,14 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import environ
+
 from .social_config import SOCIAL_AUTH_CONFIGS
+
+env = environ.Env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(BASE_DIR / '.env')
-env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 SECRET_KEY = env("SECRET_KEY")
 JWT_SECRET = env("JWT_SECRET")
@@ -18,7 +20,7 @@ JWT_AUTH_COOKIE = JWT_SECRET  # Cookie name. Enables cookies if value is not Non
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["*"]#"https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000"]
+ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000"]
 
 # Installed Django applications
 INSTALLED_APPS = [
