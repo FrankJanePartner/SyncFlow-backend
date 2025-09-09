@@ -10,15 +10,28 @@ logger = logging.getLogger(__name__)
 
 class CustomUserAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
-        token = request.COOKIES.get("jwt")
+        token = None
+
+        # First, try to get token from Authorization header
+        auth_header = request.META.get("HTTP_AUTHORIZATION")
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            logger.debug("JWT token found in Authorization header")
+        else:
+            # Fallback to cookies
+            token = request.COOKIES.get("jwt")
+            if token:
+                logger.debug("JWT token found in cookies")
 
         if not token:
-            logger.debug("No JWT token found in cookies")
+            logger.debug("No JWT token found in Authorization header or cookies")
             return None
 
         try:
             payload = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
-            logger.debug(f"JWT token decoded successfully for user ID: {payload.get('id')}")
+            logger.debug(
+                f"JWT token decoded successfully for user ID: {payload.get('id')}"
+            )
         except jwt.ExpiredSignatureError:
             logger.warning("JWT token has expired")
             raise exceptions.AuthenticationFailed("Token has expired")

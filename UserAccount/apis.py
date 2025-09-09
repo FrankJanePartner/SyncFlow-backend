@@ -58,7 +58,7 @@ class LoginApi(views.APIView):
             )
 
         token = services.create_token(user.id)
-        return response.Response(
+        resp = response.Response(
             {
                 "token": token,
                 "user": {
@@ -70,7 +70,15 @@ class LoginApi(views.APIView):
             },
             status=status.HTTP_200_OK,
         )
-
+        # Set JWT token as cookie for compatibility
+        resp.set_cookie(
+            key="jwt",
+            value=token,
+            httponly=True,
+            secure=True,
+            samesite="Lax",
+        )
+        return resp
 
 
 class UserApi(views.APIView):
