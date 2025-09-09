@@ -1,27 +1,87 @@
 services:
+  # Django Web Service (API + HTML pages)
   - type: web
-    name: syncflow-backend
+    name: syncfloww-backend
     env: python
-    plan: free
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
       python manage.py migrate --noinput
-    startCommand: gunicorn SyncFloww.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: gunicorn syncfloww.wsgi:application --bind 0.0.0.0:$PORT
+    autoDeploy: true
     envVars:
+      - key: SECRET_KEY
+        sync: false
+      - key: DEBUG
+        value: false
       - key: DATABASE_URL
         fromDatabase:
-          name: syncflow-db
+          name: syncfloww-db
           property: connectionString
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: GOOGLE_OAUTH2_CLIENT_ID
+        sync: false
+      - key: GOOGLE_OAUTH2_CLIENT_SECRET
+        sync: false
+      - key: FACEBOOK_APP_ID
+        sync: false
+      - key: FACEBOOK_APP_SECRET
+        sync: false
+      - key: EMAIL_HOST
+        value: smtp.gmail.com
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: EMAIL_USE_TLS
+        value: "true"
+
+  # Celery Worker (background jobs)
+  - type: worker
+    name: syncfloww-celery-worker
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A syncfloww worker -l info
+    envVars:
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
       - key: SECRET_KEY
-        generateValue: true
-      - key: DJANGO_SETTINGS_MODULE
-        value: SyncFloww.settings.production
-      - key: WEB_CONCURRENCY
-        value: 4
-      - key: JWT_SECRET
-        generateValue: true
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: syncfloww-db
+          property: connectionString
+
+  # Celery Beat (scheduled jobs)
+  - type: worker
+    name: syncfloww-celery-beat
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: celery -A syncfloww beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    envVars:
+      - key: CELERY_BROKER_URL
+        sync: false
+      - key: CELERY_RESULT_BACKEND
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: syncfloww-db
+          property: connectionString
 
 databases:
-  - name: syncflow-db
-    plan: free
+  - name: syncfloww-db
+    databaseName: syncfloww
+    user: syncfloww
