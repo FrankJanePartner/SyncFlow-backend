@@ -39,7 +39,7 @@ urlpatterns = [
 
    # core
     path('api/', include('core.urls')),
-    path('', RedirectView.as_view(url='/api/guest_demo'), name='root_redirect'),
+    path('', RedirectView.as_view(url='/api/guest'), name='root_redirect'),
 
     
     # Integrations
