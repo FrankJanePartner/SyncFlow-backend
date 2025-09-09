@@ -58,6 +58,8 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
 ]
 
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+
 # static files (when using runserver with --insecure)
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
