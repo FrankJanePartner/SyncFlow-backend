@@ -148,6 +148,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://syncfloww.onrender.com",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
+    "https://preview--prompt-reach-ai.lovable.app",
 ]
 
 # Cookie settings for session and CSRF
