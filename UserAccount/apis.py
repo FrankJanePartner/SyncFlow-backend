@@ -1,9 +1,12 @@
 from rest_framework import views, response, exceptions, permissions, status
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from . import serializer as user_serializer
 from . import services, authentication
 from .services import UserDataClass
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RegisterApi(views.APIView):
     """
     User registration endpoint.
@@ -36,6 +39,7 @@ class RegisterApi(views.APIView):
         )
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LoginApi(views.APIView):
     authentication_classes = []  # disable session/CSRF for API
     permission_classes = [permissions.AllowAny]
@@ -94,6 +98,7 @@ class UserApi(views.APIView):
         return response.Response(serializer.data, status=status.HTTP_200_OK)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LogoutApi(views.APIView):
     """
     Logs out the current user by clearing JWT cookie.
