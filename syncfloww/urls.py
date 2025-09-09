@@ -9,6 +9,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic import RedirectView
+
 
 # from syncflowbackend.UserAccount import views
 
@@ -37,6 +39,8 @@ urlpatterns = [
 
    # core
     path('api/', include('core.urls')),
+    path('', RedirectView.as_view(url='/api/')),
+
     
     # Integrations
     path('api/integrations/', include('integrations.urls')),
