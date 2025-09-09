@@ -19,7 +19,7 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-key")
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000", 'syncfloww.onrender.com']
+ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000", 'syncfloww.onrender.com', "https://preview--prompt-reach-ai.lovable.app", "preview--prompt-reach-ai.lovable.app"]
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -151,11 +151,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://preview--prompt-reach-ai.lovable.app",
 ]
 
-# Cookie settings for session and CSRF
-SESSION_COOKIE_SAMESITE = "Lax"
-CSRF_COOKIE_SAMESITE = "Lax"
+# Security settings for production
+SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+X_FRAME_OPTIONS = "DENY"
 
 
 # Site ID for django.contrib.sites
@@ -276,24 +278,26 @@ REST_FRAMEWORK = {
 
 }
 
-# Logging configuration (commented out)
-# # LOGGING = {
-# #     'version': 1,
-# #     'disable_existing_loggers': False,
-# #     'handlers': {
-# #         'console': {
-# #             'class': 'logging.StreamHandler',
-# #         },
-# #     },
-# #     'loggers': {
-# #         'django.request': {
-# #             'handlers': ['console'],
-# #             'level': 'WARNING',  # Change to WARNING or ERROR
-# #             'propagate': False,
-# #         },
-# #     },
-# # }
-
-
+# Logging for production
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
 
 
