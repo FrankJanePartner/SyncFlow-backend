@@ -44,6 +44,8 @@ services:
         sync: false
       - key: EMAIL_USE_TLS
         value: "true"
+      - key: DJANGO_SETTINGS_MODULE
+        value: syncfloww.settings_production
 
   # Celery Worker (background jobs)
   - type: worker
