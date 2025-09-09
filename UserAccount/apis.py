@@ -37,39 +37,40 @@ class RegisterApi(views.APIView):
 
 
 class LoginApi(views.APIView):
-    """
-    Login with email + password.
-    Returns JWT in cookie and response body.
-    """
+    authentication_classes = []  # disable session/CSRF for API
+    permission_classes = [permissions.AllowAny]
 
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
 
         if not email or not password:
-            raise exceptions.AuthenticationFailed("Email and password are required.")
+            return response.Response(
+                {"detail": "Email and password are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
-        user = services.user_email_selector(email=email)
+        user = services.user_email_selector(email)
+        if user is None or not user.check_password(password):
+            return response.Response(
+                {"detail": "Invalid email or password."},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
-        if user is None or not user.check_password(raw_password=password):
-            raise exceptions.AuthenticationFailed("Invalid credentials.")
-
-        if user.id is not None:
-            token = services.create_token(user_id=user.id)
-        else:
-            raise exceptions.AuthenticationFailed("User ID is not available.")
-
-        resp = response.Response(
+        token = services.create_token(user.id)
+        return response.Response(
             {
-                "detail": "Login successful.",
                 "token": token,
-                "user": user_serializer.UserSerializer(user).data,
+                "user": {
+                    "id": user.id,
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                },
             },
             status=status.HTTP_200_OK,
         )
-        resp.set_cookie(key="jwt", value=token, httponly=True)
 
-        return resp
 
 
 class UserApi(views.APIView):

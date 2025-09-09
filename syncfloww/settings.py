@@ -269,7 +269,10 @@ SOCIAL_AUTH_FACEBOOK_SECRET = env('FACEBOOK_APP_SECRET')
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "UserAccount.authentication.CustomUserAuthentication",
+        "rest_framework.authentication.BasicAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
     ),
+
 }
 
 # Logging configuration (commented out)
