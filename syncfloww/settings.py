@@ -19,7 +19,7 @@ JWT_SECRET = os.environ.get("JWT_SECRET", "dev-secret-key")
 DEBUG = True
 
 # Hosts/domain names that are valid for this site
-ALLOWED_HOSTS = ["https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000", 'syncfloww.onrender.com', "https://preview--prompt-reach-ai.lovable.app", "preview--prompt-reach-ai.lovable.app"]
+ALLOWED_HOSTS = ["https://syncfloww-backend.onrender.com", "https://syncfloww.onrender.com", "http://localhost:8000", "http://127.0.0.1:8000", "localhost:8000", 'syncfloww-backend.onrender.com', 'syncfloww.onrender.com', "https://preview--prompt-reach-ai.lovable.app", "preview--prompt-reach-ai.lovable.app"]
 
 # Installed Django applications
 INSTALLED_APPS = [
@@ -133,6 +133,7 @@ DEFAULT_FROM_EMAIL = 'no-reply@syncflow.com'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
+    "https://syncfloww-backend.onrender.com",
     "https://syncfloww.onrender.com",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",
@@ -145,6 +146,7 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8080",
     "http://localhost:8000",
+    "https://syncfloww-backend.onrender.com",
     "https://syncfloww.onrender.com",
     "http://localhost:3000",   # keep if you also dev locally
     "http://localhost:5173",

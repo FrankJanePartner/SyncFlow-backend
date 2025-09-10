@@ -18,6 +18,8 @@ X_FRAME_OPTIONS = "DENY"
 
 # Allowed hosts for production
 ALLOWED_HOSTS = [
+    "syncfloww-backend.onrender.com",
+    "https://syncfloww-backend.onrender.com",
     "syncfloww.onrender.com",
     "https://syncfloww.onrender.com",
     "https://preview--prompt-reach-ai.lovable.app",  # Add frontend origin
@@ -25,6 +27,7 @@ ALLOWED_HOSTS = [
 
 # CORS settings for production
 CORS_ALLOWED_ORIGINS = [
+    "https://syncfloww-backend.onrender.com",
     "https://syncfloww.onrender.com",
     "https://preview--prompt-reach-ai.lovable.app",
 ]
@@ -33,6 +36,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 # CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = [
+    "https://syncfloww-backend.onrender.com",
     "https://syncfloww.onrender.com",
     "https://preview--prompt-reach-ai.lovable.app",
 ]
