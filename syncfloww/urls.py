@@ -48,6 +48,7 @@ urlpatterns = [
     # socials
     path('api/social/', include('social.urls')),
     path('api-auth/', include('rest_framework.urls')),
+    path("oauth/", include("social_django.urls", namespace="social")),
 
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
