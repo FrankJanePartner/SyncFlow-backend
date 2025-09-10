@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import redirect
 from urllib.parse import urlencode
@@ -18,6 +19,27 @@ env = environ.Env()
 environ.Env.read_env(Path(__file__).resolve().parent.parent.parent / '.env')
 
 FRONTEND_URL = env('FRONTEND_URL')
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def social_init_with_brand(request, provider):
+    brand_id = request.data.get("brand")
+    if not brand_id:
+        return Response({"detail": "Brand is required"}, status=400)
+
+    # Save brand in session for pipeline
+    request.session["brand_id"] = brand_id
+
+    # Validate provider
+    from .models import SOCIAL_PLATFORM_CHOICES
+    valid_providers = [p[0] for p in SOCIAL_PLATFORM_CHOICES]
+    if provider not in valid_providers:
+        return Response({"detail": "Unsupported provider"}, status=400)
+
+    # Redirect URL from python-social-auth
+    auth_url = f"/login/{provider}/"   # handled by social_django
+    return Response({"auth_url": auth_url})
+
 
 class SocialAuthInitView(APIView):
     permission_classes = [IsAuthenticated]

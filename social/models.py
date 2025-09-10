@@ -44,32 +44,23 @@ SOCIAL_PLATFORM_CHOICES = [
 ]
 
 class SocialAccount(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='social_accounts'
-    )
+    
     brand = models.ForeignKey(
         'core.Brand',
         on_delete=models.CASCADE,
         related_name='social_accounts'
     )
-    platform = models.CharField(max_length=20)
-    username = models.CharField(max_length=100)
+    provider = models.CharField(max_length=50, choices=SOCIAL_PLATFORM_CHOICES)
+    uid = models.CharField(max_length=255)  # provider user ID
     access_token = models.TextField()
-    refresh_token = models.TextField(blank=True, null=True)
-    token_expires_at = models.DateTimeField(blank=True, null=True)
-    is_active = models.BooleanField(default=True)
-    meta_data = models.JSONField(default=dict)
+    extra_data = models.JSONField(default=dict, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('user', 'platform', 'brand')
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.email} - {self.platform} ({self.brand.name})"
+        return f"{self.provider} ({self.brand.name})"
 
     @property
     def is_token_valid(self):
@@ -82,7 +73,7 @@ class SocialAccount(models.Model):
             return False
         
         try:
-            provider = get_auth_provider(self.platform)
+            provider = get_auth_provider(self.provider)
             token_data = provider.refresh_token(self.refresh_token)
             
             self.access_token = token_data['access_token']
