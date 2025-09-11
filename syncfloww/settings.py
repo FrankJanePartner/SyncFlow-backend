@@ -232,18 +232,29 @@ CONTENT_SECURITY_POLICY = {
             "http://localhost:8080",
             "https://preview--prompt-reach-ai.lovable.app",
         ),
-        "font-src": ("'self'", "https://fonts.gstatic.com"),
+        "font-src": (
+            "'self'",
+            "https://fonts.gstatic.com",
+            "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+            "https://cdn.tailwindcss.com",
+            "https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js",
+            "https://unpkg.com",
+        ),
         "img-src": ("'self'", "data:", "https://your-cdn.com"),
         "script-src": (
             "'self'",
             "https://cdn.jsdelivr.net",
             "https://unpkg.com",
             "'unsafe-inline'",  # ⚠️ Avoid in production if possible
+            "https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js",
+            "https://cdn.tailwindcss.com",
         ),
         "style-src": (
             "'self'",
             "https://fonts.googleapis.com",
             "'unsafe-inline'",  # ⚠️ Avoid if possible
+            "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+            "https://cdn.tailwindcss.com",
         ),
     }
 }
