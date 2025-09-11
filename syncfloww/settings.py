@@ -2,8 +2,10 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import environ
-
+# from supabase import create_client, Client
 from .social_config import SOCIAL_AUTH_CONFIGS
+import dj_database_url
+
 
 env = environ.Env()
 
@@ -100,7 +102,9 @@ WSGI_APPLICATION = 'syncfloww.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
+# supabase_url = os.environ.get("SUPABASE_URL")
+# supabase_key = os.environ.get("SUPABASE_KEY")
+# supabase: Client = create_client(supabase_url, supabase_key)
 
 DATABASES = {
     'default': {
@@ -108,8 +112,8 @@ DATABASES = {
         'NAME': env('POSTGRES_DB'),
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': 'db.xxxxx.supabase.com',
-        'PORT': env('POSTGRES_PORT', default='5432'),
+        'HOST': env('POSTGRES_HOST'),
+        'PORT': '5432',
     }
 }
 
