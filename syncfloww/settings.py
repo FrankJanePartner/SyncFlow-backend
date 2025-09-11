@@ -2,9 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import environ
-# from supabase import create_client, Client
 from .social_config import SOCIAL_AUTH_CONFIGS
-import dj_database_url
 
 
 env = environ.Env()
@@ -95,16 +93,6 @@ AUTH_USER_MODEL = "UserAccount.User"
 
 # WSGI application callable
 WSGI_APPLICATION = 'syncfloww.wsgi.application'
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-# supabase_url = os.environ.get("SUPABASE_URL")
-# supabase_key = os.environ.get("SUPABASE_KEY")
-# supabase: Client = create_client(supabase_url, supabase_key)
 
 DATABASES = {
     'default': {
