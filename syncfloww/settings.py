@@ -94,12 +94,25 @@ AUTH_USER_MODEL = "UserAccount.User"
 # WSGI application callable
 WSGI_APPLICATION = 'syncfloww.wsgi.application'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'HOST': 'db.xxxxx.supabase.com',
+        'PORT': env('POSTGRES_PORT', default='5432'),
     }
 }
+
 
 # Localization settings
 LANGUAGE_CODE = 'en-us'
